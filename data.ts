@@ -19,6 +19,13 @@ const notes = [
     createdAt: "11/15/2023",
     updatedAt: "11/15/2023",
   },
+  {
+    id: 3,
+    title: "The quick fox",
+    content: "The quick brown fox jumps over the lazy dog",
+    createdAt: "Wed Nov 15 2023 18:11:40 GMT+0800 (Philippine Standard Time)",
+    updatedAt: "Wed Nov 15 2023 18:11:40 GMT+0800 (Philippine Standard Time)",
+  },
 ]
 
 export { user, notes }

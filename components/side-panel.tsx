@@ -9,6 +9,9 @@ import { useNotesStore } from "@/slices/use-notes-store"
 
 export default function SidePanel({ className }: { className?: string }) {
   const { setNoteId } = useNotesStore()
+  const sortedNotes = [...notes].sort(
+    (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+  )
 
   const handleCreateNew = () => {
     const id = notes.length + 1
@@ -21,6 +24,8 @@ export default function SidePanel({ className }: { className?: string }) {
     }
     notes.push(prop)
     setNoteId(id)
+
+    console.log(new Date().toString())
   }
 
   return (
@@ -41,7 +46,7 @@ export default function SidePanel({ className }: { className?: string }) {
 
       <h2 className="mb-2">Notes</h2>
       <div className="flex flex-col gap-2 mb-10">
-        {notes.map((note) => (
+        {sortedNotes.map((note) => (
           <NoteList key={note.id} note={note} />
         ))}
       </div>
