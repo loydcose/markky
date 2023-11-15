@@ -1,12 +1,14 @@
-"use client"
+// DynamicTextarea.tsx
 
 import React, { useState, useRef, useEffect, ChangeEvent, TextareaHTMLAttributes } from 'react';
 import { Textarea } from './ui/textarea';
 
-interface ResizableTextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {}
+interface DynamicTextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
+  onChange: (event: ChangeEvent<HTMLTextAreaElement>) => void;
+  value: string;
+}
 
-const ResizableTextarea: React.FC<ResizableTextareaProps> = (props) => {
-  const [value, setValue] = useState<string>('');
+const DynamicTextarea: React.FC<DynamicTextareaProps> = ({ onChange, value, ...props }) => {
   const [textareaRows, setTextareaRows] = useState<number>(1);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -14,28 +16,25 @@ const ResizableTextarea: React.FC<ResizableTextareaProps> = (props) => {
     updateTextareaRows();
   }, [value]);
 
-  const handleInputChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    setValue(event.target.value);
-  };
-
   const updateTextareaRows = () => {
     if (textareaRef.current) {
       const newRows = textareaRef.current.value.split('\n').length || 1;
-      setTextareaRows(newRows + 1);
+      setTextareaRows(newRows);
     }
   };
 
   return (
     <Textarea
       ref={textareaRef}
-      value={value}
-      onChange={handleInputChange}
       rows={textareaRows}
-      style={{resize: "none"}}
-      className='outline-none border-none ring-0 focus:outline-none focus:ring-0 focus:border-none'
+      value={value}
+      onChange={(e) => {
+        onChange(e);
+        updateTextareaRows();
+      }}
       {...props}
     />
   );
 };
 
-export default ResizableTextarea;
+export default DynamicTextarea;

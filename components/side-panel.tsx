@@ -1,15 +1,12 @@
 import { Button } from "@/components/ui/button"
+import { notes } from "@/data"
 import { PanelLeftClose, X, LogOut, Github } from "lucide-react"
 import React from "react"
+import NoteList from "./note-list"
 
 export default function SidePanel({ className }: { className?: string }) {
   return (
-    <aside
-      className={
-        "flex flex-col " +
-        className
-      }
-    >
+    <aside className={"flex flex-col " + className}>
       <div className="flex items-start justify-between mb-6">
         <h1 className="font-bold">Markky</h1>
         <Button variant={"outline"}>
@@ -22,30 +19,9 @@ export default function SidePanel({ className }: { className?: string }) {
 
       <h2 className="mb-2">Notes</h2>
       <div className="flex flex-col gap-2 mb-10">
-        <Button
-          variant={"outline"}
-          className="flex items-center justify-between gap-2 group"
-        >
-          <p>Hello world!</p>
-          <Button
-            variant={"ghost"}
-            className="opacity-0 group-hover:opacity-100"
-          >
-            <X size={20} />
-          </Button>
-        </Button>
-        <Button
-          variant={"outline"}
-          className="flex items-center justify-between gap-2 group"
-        >
-          <p>Hello world!</p>
-          <Button
-            variant={"ghost"}
-            className="opacity-0 group-hover:opacity-100"
-          >
-            <X size={20} />
-          </Button>
-        </Button>
+        {notes.map((note) => (
+          <NoteList key={note.id} note={note}/>
+        ))}
       </div>
 
       <div className="flex items-center justify-between gap-2 mb-4 mt-auto">

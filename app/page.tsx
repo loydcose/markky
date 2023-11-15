@@ -11,6 +11,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 import SidePanel from "@/components/side-panel"
+import EditContent from "@/components/edit-content"
 
 export default function Home() {
   return (
@@ -39,10 +40,7 @@ export default function Home() {
               </span>
             </div>
           </div>
-          <DynamicTextarea
-            defaultValue={"Hello world!"}
-            placeholder="Type your notes"
-          />
+          <EditContent/>
         </section>
       </main>
     </Sheet>
