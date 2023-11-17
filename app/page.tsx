@@ -48,7 +48,7 @@ export default function Home() {
   return (
     <main className="flex relative">
       <SidePanel
-        className="hidden md:block top-0 w-[400px] shrink-0 sticky"
+        className="hidden md:flex top-0 w-[400px] shrink-0 sticky"
         setIsSidePanelOpen={setIsSidePanelOpen}
       />
       <SidePanel
