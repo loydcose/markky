@@ -26,6 +26,7 @@ export default function SidePanel({
       id,
       title: "Untitled",
       content: "",
+      isPinned: false,
       createdAt: new Date().toString(),
       updatedAt: new Date().toString(),
     }
@@ -60,16 +61,16 @@ export default function SidePanel({
 
       <Pin size={20} className="text-zinc-600 mb-3" />
       <div className="flex flex-col gap-1 mb-10">
-        {sortedNotes.map((note) => (
-          <NoteList key={note.id} note={note} />
-        ))}
+        {sortedNotes.map((note) => {
+          return note.isPinned && <NoteList key={note.id} note={note} />
+        })}
       </div>
 
       <Clock size={20} className="text-zinc-600 mb-3" />
       <div className="flex flex-col gap-1 mb-10">
-        {sortedNotes.map((note) => (
-          <NoteList key={note.id} note={note} />
-        ))}
+        {sortedNotes.map((note) => {
+          return !note.isPinned && <NoteList key={note.id} note={note} />
+        })}
       </div>
 
       <footer className="flex items-center gap-2 justify-between mt-auto">
