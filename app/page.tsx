@@ -19,18 +19,12 @@ import { cn } from "@/lib/utils"
 import { useNotesStore } from "@/slices/use-notes-store"
 import { notes } from "@/data"
 import { useSession } from "next-auth/react"
-import dotenv from "dotenv"
-dotenv.config()
-
 
 export default function Home() {
   const [isSidePanelOpen, setIsSidePanelOpen] = useState(false)
   const { noteId } = useNotesStore()
   const foundNote = notes.find((note) => noteId === note.id)
   const { data: session } = useSession()
-
-  console.log({ session, GITHUB_SECRET: process.env.GITHUB_SECRET, GITHUB_ID: process.env.GITHUB_ID })
-
 
   const handlePinNote = () => {
     if (!foundNote) return
@@ -110,7 +104,7 @@ export default function Home() {
               </button>
             ) : (
               <button
-                onClick={() => signIn('github', { callbackUrl: 'http://localhost:3000/' })}
+                onClick={() => signIn('github')}
                 title="Log in"
                 type="button"
                 className="text-zinc-600 hover:text-zinc-400 transition-all"
@@ -118,6 +112,14 @@ export default function Home() {
                 <LogIn size={20} />
               </button>
             )}
+              <button
+                onClick={() => signIn('google')}
+                title="Log in"
+                type="button"
+                className="text-zinc-600 hover:text-zinc-400 transition-all"
+              >
+                Login by google
+              </button>
           </div>
         </div>
         <EditContent />
