@@ -1,7 +1,6 @@
 // DynamicTextarea.tsx
 
 import React, { useState, useRef, useEffect, ChangeEvent, TextareaHTMLAttributes } from 'react';
-import { Textarea } from './ui/textarea';
 
 interface DynamicTextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   onChange: (event: ChangeEvent<HTMLTextAreaElement>) => void;
@@ -24,7 +23,7 @@ const DynamicTextarea: React.FC<DynamicTextareaProps> = ({ onChange, value, ...p
   };
 
   return (
-    <Textarea
+    <textarea
       ref={textareaRef}
       rows={textareaRows}
       value={value}

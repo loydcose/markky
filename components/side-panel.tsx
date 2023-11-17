@@ -1,6 +1,5 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
 import { notes } from "@/data"
 import { PanelLeftClose, X, LogOut, Github } from "lucide-react"
 import React from "react"
@@ -32,17 +31,13 @@ export default function SidePanel({ className }: { className?: string }) {
     <aside className={"flex flex-col " + className}>
       <div className="flex items-start justify-between mb-6">
         <h1 className="font-bold">Markky</h1>
-        <Button variant={"outline"}>
+        <button type="button">
           <PanelLeftClose size={20} />
-        </Button>
+        </button>
       </div>
-      <Button
-        onClick={handleCreateNew}
-        variant={"default"}
-        className="w-full mb-10"
-      >
+      <button type="button" onClick={handleCreateNew} className="w-full mb-10">
         Create new
-      </Button>
+      </button>
 
       <h2 className="mb-2">Notes</h2>
       <div className="flex flex-col gap-2 mb-10">
@@ -56,15 +51,15 @@ export default function SidePanel({ className }: { className?: string }) {
           <span className="h-[30px] aspect-square rounded-full bg-zinc-700"></span>
           <h3 className="font-bold">Loyd Cose</h3>
         </div>
-        <Button variant={"outline"}>
+        <button type="button">
           <LogOut size={20} />
-        </Button>
+        </button>
       </div>
       <footer className="border-t border-t-zinc-800 flex items-center gap-2 justify-between py-2">
         <p className="text-sm">All rights reserved</p>
-        <Button variant={"ghost"}>
+        <button type="button">
           <Github size={20} />
-        </Button>
+        </button>
       </footer>
     </aside>
   )
