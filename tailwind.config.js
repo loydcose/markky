@@ -7,6 +7,11 @@ module.exports = {
     "./app/**/*.{ts,tsx}",
     "./src/**/*.{ts,tsx}",
   ],
-  theme: {},
+  theme: {
+    fontFamily: {
+      mono: "Noto Sans Mono, monospace"
+    },
+    extend: {}
+  },
   plugins: [require("tailwindcss-animate")],
 }
