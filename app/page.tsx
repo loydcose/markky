@@ -9,19 +9,28 @@ import {
   Sun,
   Menu,
   Pin,
+  LogIn,
 } from "lucide-react"
-
+import { signIn, signOut } from "next-auth/react"
 import SidePanel from "@/components/side-panel"
 import EditContent from "@/components/edit-content"
 import { useState } from "react"
 import { cn } from "@/lib/utils"
 import { useNotesStore } from "@/slices/use-notes-store"
 import { notes } from "@/data"
+import { useSession } from "next-auth/react"
+import dotenv from "dotenv"
+dotenv.config()
+
 
 export default function Home() {
   const [isSidePanelOpen, setIsSidePanelOpen] = useState(false)
   const { noteId } = useNotesStore()
   const foundNote = notes.find((note) => noteId === note.id)
+  const { data: session } = useSession()
+
+  console.log({ session, GITHUB_SECRET: process.env.GITHUB_SECRET, GITHUB_ID: process.env.GITHUB_ID })
+
 
   const handlePinNote = () => {
     if (!foundNote) return
@@ -76,7 +85,9 @@ export default function Home() {
             >
               <Pin
                 size={20}
-                className={cn(foundNote?.isPinned ? "text-yellow-600" : "text-zinc-600")}
+                className={cn(
+                  foundNote?.isPinned ? "text-yellow-600" : "text-zinc-600"
+                )}
               />
             </button>
 
@@ -87,13 +98,26 @@ export default function Home() {
             >
               <Sun size={20} />
             </button>
-            <button
-              title="Log out"
-              type="button"
-              className="text-zinc-600 hover:text-zinc-400 transition-all"
-            >
-              <LogOut size={20} />
-            </button>
+
+            {session ? (
+              <button
+                onClick={() => signOut()}
+                title="Log out"
+                type="button"
+                className="text-zinc-600 hover:text-zinc-400 transition-all"
+              >
+                <LogOut size={20} />
+              </button>
+            ) : (
+              <button
+                onClick={() => signIn('github', { callbackUrl: 'http://localhost:3000/' })}
+                title="Log in"
+                type="button"
+                className="text-zinc-600 hover:text-zinc-400 transition-all"
+              >
+                <LogIn size={20} />
+              </button>
+            )}
           </div>
         </div>
         <EditContent />
