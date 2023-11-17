@@ -19,6 +19,7 @@ import { cn } from "@/lib/utils"
 import { useNotesStore } from "@/slices/use-notes-store"
 import { notes } from "@/data"
 import { useSession } from "next-auth/react"
+import Link from "next/link"
 
 export default function Home() {
   const [isSidePanelOpen, setIsSidePanelOpen] = useState(false)
@@ -103,23 +104,14 @@ export default function Home() {
                 <LogOut size={20} />
               </button>
             ) : (
-              <button
-                onClick={() => signIn('github')}
+              <Link
                 title="Log in"
-                type="button"
+                href="/auth"
                 className="text-zinc-600 hover:text-zinc-400 transition-all"
               >
                 <LogIn size={20} />
-              </button>
+              </Link>
             )}
-              <button
-                onClick={() => signIn('google')}
-                title="Log in"
-                type="button"
-                className="text-zinc-600 hover:text-zinc-400 transition-all"
-              >
-                Login by google
-              </button>
           </div>
         </div>
         <EditContent />

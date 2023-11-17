@@ -9,7 +9,7 @@ export default withAuth(
     callbacks: {
       authorized: ({ req, token }) => {
         if (
-          req.nextUrl.pathname.startsWith('/protected') &&
+          req.nextUrl.pathname.startsWith('/') &&
           token === null
         ) {
           return false
