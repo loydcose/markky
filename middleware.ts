@@ -1,21 +1,11 @@
 import { withAuth } from "next-auth/middleware"
 
-// middleware is applied to all routes, use conditionals to select
+// docs: https://next-auth.js.org/configuration/nextjs
 
-export default withAuth(
-  function middleware (req) {
+export default withAuth(function middleware(req) {}, {
+  pages: {
+    signIn: "/auth",
   },
-  {
-    callbacks: {
-      authorized: ({ req, token }) => {
-        if (
-          req.nextUrl.pathname.startsWith('/') &&
-          token === null
-        ) {
-          return false
-        }
-        return true
-      }
-    }
-  }
-)
+})
+
+export const config = { matcher: ["/"] }
