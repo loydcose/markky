@@ -47,19 +47,22 @@ export default function Home() {
           </div>
           <div className="flex items-center gap-3 md:ml-auto">
             <button
+              title="Pin this note"
               type="button"
               className="text-zinc-600 hover:text-zinc-400 transition-all"
             >
-              <Pin size={20} className="text-zinc-600" />
+              <Pin size={20} className={cn(true ? "text-yellow-600" : "text-zinc-600")} />
             </button>
 
             <button
+              title="Toggle theme"
               type="button"
               className="text-zinc-600 hover:text-zinc-400 transition-all"
             >
               <Sun size={20} />
             </button>
             <button
+              title="Log out"
               type="button"
               className="text-zinc-600 hover:text-zinc-400 transition-all"
             >
