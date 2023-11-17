@@ -37,7 +37,7 @@ export default function EditContent() {
     <DynamicTextarea
       value={input}
       onChange={(e) => setInput(e.target.value)}
-      placeholder="Type your notes"
+      placeholder="Type your notes here..."
     />
   )
 }

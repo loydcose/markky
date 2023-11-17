@@ -16,7 +16,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark">
-      <body className={inter.className + " min-h-screen dark:bg-zinc-900"}>{children}</body>
+      <body className={inter.className + " min-h-screen bg-white dark:bg-zinc-900"}>{children}</body>
     </html>
   )
 }

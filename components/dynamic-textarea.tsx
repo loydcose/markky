@@ -8,7 +8,7 @@ interface DynamicTextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElemen
 }
 
 const DynamicTextarea: React.FC<DynamicTextareaProps> = ({ onChange, value, ...props }) => {
-  const [textareaRows, setTextareaRows] = useState<number>(1);
+  const [textareaRows, setTextareaRows] = useState<number>(2);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
@@ -24,8 +24,9 @@ const DynamicTextarea: React.FC<DynamicTextareaProps> = ({ onChange, value, ...p
 
   return (
     <textarea
+      className='w-full bg-transparent text-zinc-400 resize-none outline-none placeholder:text-zinc-600'
       ref={textareaRef}
-      rows={textareaRows}
+      rows={textareaRows + 4}
       value={value}
       onChange={(e) => {
         onChange(e);
