@@ -15,10 +15,11 @@ export default function SidePanel({
   className,
   setIsSidePanelOpen,
 }: SidePanelProps) {
-  const { setNoteId } = useNotesStore()
+  const { setNoteId, noteId } = useNotesStore()
   const sortedNotes = notes.sort(
     (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
   )
+
 
   const handleCreateNew = () => {
     const id = new Date().getTime()
