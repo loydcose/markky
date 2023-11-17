@@ -21,10 +21,10 @@ export default function SidePanel({
   )
 
   const handleCreateNew = () => {
-    const id = notes.length + 1
+    const id = new Date().getTime()
     const prop = {
       id,
-      title: "Untitled " + notes.length,
+      title: "Untitled " + id,
       content: "",
       isPinned: false,
       createdAt: new Date().toString(),
