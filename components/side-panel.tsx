@@ -60,7 +60,7 @@ export default function SidePanel({
       </button>
 
       <Pin size={20} className="text-zinc-600 mb-3" />
-      <div className="flex flex-col gap-1 mb-10">
+      <ul className="flex flex-col gap-1 mb-10">
         {sortedNotes.map((note, index) => {
           return (
             note.isPinned && (
@@ -68,10 +68,10 @@ export default function SidePanel({
             )
           )
         })}
-      </div>
+      </ul>
 
       <Clock size={20} className="text-zinc-600 mb-3" />
-      <div className="flex flex-col gap-1 mb-10">
+      <ul className="flex flex-col gap-1 mb-10">
         {sortedNotes.map((note, index) => {
           return (
             !note.isPinned && (
@@ -79,7 +79,7 @@ export default function SidePanel({
             )
           )
         })}
-      </div>
+      </ul>
 
       <footer className="flex items-center gap-2 justify-between mt-auto">
         <p className="text-sm">Markky @ 2023</p>

@@ -26,21 +26,23 @@ export default function NoteList({
   }
 
   return (
-    <button
-      type="button"
-      onClick={() => setNoteId(note.id)}
-      key={note.id}
-      className="relative flex items-center justify-between gap-2 group text-ellipsis isolation-auto"
-    >
+    <li className="relative flex items-center justify-between gap-2 group isolation-auto">
       <span className="absolute -inset-y-1 -inset-x-2 transition-all group-hover:bg-zinc-800 rounded-md -z-10"></span>
-      <p
-        className={cn(
-          "group-hover:text-zinc-300 transition-all",
-          isSelected && "text-zinc-300"
-        )}
+      <button
+        type="button"
+        onClick={() => setNoteId(note.id)}
+        key={note.id}
+        className=""
       >
-        {note.title}
-      </p>
+        <p
+          className={cn(
+            "group-hover:text-zinc-300 transition-all text-ellipsis",
+            isSelected && "text-zinc-300"
+          )}
+        >
+          {note.title}
+        </p>
+      </button>
       <button
         type="button"
         onClick={(e) => handleDeleteNote(e)}
@@ -48,6 +50,6 @@ export default function NoteList({
       >
         <X size={20} />
       </button>
-    </button>
+    </li>
   )
 }
