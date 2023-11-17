@@ -8,9 +8,9 @@ import { useDebounce } from "@/hooks/use-debounce"
 
 export default function EditContent() {
   const { noteId } = useNotesStore()
-  const [input, setInput] = useState("")
-  const debouncedValue = useDebounce<string>(input, 1000)
   const foundNote = notes.find((note) => noteId === note.id)
+  const [input, setInput] = useState(foundNote?.content || "")
+  const debouncedValue = useDebounce<string>(input, 1000)
 
   useEffect(() => {
     setInput(foundNote?.content || "")
@@ -20,7 +20,7 @@ export default function EditContent() {
     if (!foundNote) return
 
     for (const noteItem of notes) {
-      const {id, title, createdAt, updatedAt} = foundNote
+      const { id, title, createdAt, updatedAt, isPinned } = foundNote
 
       if (noteItem.id === noteId) {
         noteItem.id = id
@@ -28,9 +28,10 @@ export default function EditContent() {
         noteItem.content = input
         noteItem.createdAt = createdAt
         noteItem.updatedAt = updatedAt
+        noteItem.isPinned = isPinned
+        break
       }
     }
-    console.log("updated")
   }, [debouncedValue])
 
   return (

@@ -2,7 +2,7 @@
 
 import { notes } from "@/data"
 import { PanelLeftClose, X, LogOut, Github, Pin, Clock } from "lucide-react"
-import React, { Dispatch, SetStateAction } from "react"
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react"
 import NoteList from "./note-list"
 import { useNotesStore } from "@/slices/use-notes-store"
 
@@ -16,7 +16,7 @@ export default function SidePanel({
   setIsSidePanelOpen,
 }: SidePanelProps) {
   const { setNoteId } = useNotesStore()
-  const sortedNotes = [...notes].sort(
+  const sortedNotes = notes.sort(
     (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
   )
 
@@ -24,7 +24,7 @@ export default function SidePanel({
     const id = notes.length + 1
     const prop = {
       id,
-      title: "Untitled",
+      title: "Untitled " + notes.length,
       content: "",
       isPinned: false,
       createdAt: new Date().toString(),
@@ -37,8 +37,7 @@ export default function SidePanel({
   return (
     <aside
       className={
-        "flex flex-col p-8 md:p-16 h-screen text-zinc-600 " +
-        className
+        "flex flex-col p-8 md:p-16 h-screen text-zinc-600 " + className
       }
     >
       <div className="flex items-center gap-2 justify-between mb-6 md:mb-0">
@@ -61,15 +60,23 @@ export default function SidePanel({
 
       <Pin size={20} className="text-zinc-600 mb-3" />
       <div className="flex flex-col gap-1 mb-10">
-        {sortedNotes.map((note) => {
-          return note.isPinned && <NoteList key={note.id} note={note} />
+        {sortedNotes.map((note, index) => {
+          return (
+            note.isPinned && (
+              <NoteList key={note.id} note={note} index={index} />
+            )
+          )
         })}
       </div>
 
       <Clock size={20} className="text-zinc-600 mb-3" />
       <div className="flex flex-col gap-1 mb-10">
-        {sortedNotes.map((note) => {
-          return !note.isPinned && <NoteList key={note.id} note={note} />
+        {sortedNotes.map((note, index) => {
+          return (
+            !note.isPinned && (
+              <NoteList key={note.id} note={note} index={index} />
+            )
+          )
         })}
       </div>
 
