@@ -19,6 +19,7 @@ import { cn } from "@/lib/utils"
 import { useNotesStore } from "@/slices/use-notes-store"
 import { notes } from "@/data"
 import { useSession } from "next-auth/react"
+import LoginModal from "@/components/login-modal"
 
 export default function Home() {
   const [isSidePanelOpen, setIsSidePanelOpen] = useState(false)
@@ -45,7 +46,9 @@ export default function Home() {
   }
 
   return (
-    <main className="flex">
+    <main className="flex relative">
+      <LoginModal/>
+
       <SidePanel
         className="hidden md:block top-0 w-[400px] shrink-0 sticky"
         setIsSidePanelOpen={setIsSidePanelOpen}
