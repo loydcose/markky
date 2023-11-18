@@ -7,7 +7,7 @@ const user = {
 const notes = [
   {
     id: 1,
-    title: "Hello world!",
+    title: "Database nalang wala",
     content: "Hello world!",
     isPinned: true,
     createdAt: "11/15/2023",
