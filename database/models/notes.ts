@@ -2,11 +2,6 @@ import { Schema, models, model } from "mongoose"
 
 const noteSchema = new Schema(
   {
-    id: {
-      type: String,
-      required: true,
-      unique: true,
-    },
     ownerId: {
       type: String,
       required: true,

@@ -21,11 +21,18 @@ import { notes } from "@/data"
 import { useSession } from "next-auth/react"
 import Link from "next/link"
 
-export default function Home() {
+type HomeProps = {
+  user: any
+  userNotes: any
+}
+
+export default function Home({user, userNotes}: HomeProps) {
   const [isSidePanelOpen, setIsSidePanelOpen] = useState(false)
   const { noteId } = useNotesStore()
   const foundNote = notes.find((note) => noteId === note.id)
   const { data: session } = useSession()
+
+  // console.log({session})
 
   const handlePinNote = () => {
     if (!foundNote) return
