@@ -35,19 +35,10 @@ export default function SidePanel({
   return (
     <aside
       className={
-        "flex flex-col p-8 md:p-16 h-screen text-zinc-600 " + className
+        "flex flex-col p-8 max-h-screen text-zinc-600 border border-zinc-800 rounded-2xl " +
+        className
       }
     >
-      <div className="flex items-center gap-2 justify-between mb-6 md:mb-0">
-        <h1 className="font-bold text-zinc-300 md:mb-6">Markky</h1>
-        <button
-          onClick={() => setIsSidePanelOpen(false)}
-          type="button"
-          className="text-zinc-600 hover:text-zinc-400 transition-all md:hidden"
-        >
-          <X size={20} />
-        </button>
-      </div>
       <button
         type="button"
         onClick={handleCreateNew}

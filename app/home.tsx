@@ -27,15 +27,21 @@ type HomeProps = {
   initUserNotes: Note[]
 }
 
-export default function Home({initUser, initUserNotes}: HomeProps) {
+export default function Home({ initUser, initUserNotes }: HomeProps) {
   const [isSidePanelOpen, setIsSidePanelOpen] = useState(false)
-  const { selectedNote, setUserNotes, setUser, user, userNotes, setSelectedNote } = useNotesStore()
+  const {
+    selectedNote,
+    setUserNotes,
+    setUser,
+    user,
+    userNotes,
+    setSelectedNote,
+  } = useNotesStore()
 
   useEffect(() => {
     setUserNotes(initUserNotes)
     setUser(initUser)
   }, [])
-
 
   const handlePinNote = async () => {
     if (!selectedNote) return
@@ -46,85 +52,79 @@ export default function Home({initUser, initUserNotes}: HomeProps) {
       // refresh fetch? that's a bad idea literally. But let's try
       const userNotesRes = await getUserNotes(user?._id || "")
       setUserNotes(userNotesRes)
-      setSelectedNote(userNotesRes.find(note => selectedNote._id === note._id))
+      setSelectedNote(
+        userNotesRes.find((note) => selectedNote._id === note._id)
+      )
     } catch (error: any) {
       console.error(error.message)
     }
   }
 
-
-
   return (
-    <main className="flex relative">
-      <SidePanel
-        className="hidden md:flex top-0 w-[400px] shrink-0 sticky"
-        setIsSidePanelOpen={setIsSidePanelOpen}
-      />
-      <SidePanel
-        className={cn(
-          "h-full fixed md:hidden top-0 w-[80%] left-0 bottom-0 bg-[#1A1A1D]",
-          isSidePanelOpen ? "flex" : "hidden"
-        )}
-        setIsSidePanelOpen={setIsSidePanelOpen}
-      />
-
-      <section className="p-8 md:p-16 grow w-full">
-        <div className="mb-12 flex items-center justify-between">
-          <div className="flex items-center gap-3 md:hidden">
-            <button
-              type="button"
-              className="text-zinc-600 hover:text-zinc-400 transition-all"
-              onClick={() => setIsSidePanelOpen(true)}
-            >
-              <Menu size={20} />
-            </button>
-            <h1 className="font-bold text-zinc-300">Markky</h1>
-          </div>
-          <div className="flex items-center gap-3 md:ml-auto">
-            <button
-              onClick={handlePinNote}
-              title="Pin this note"
-              type="button"
-              className="text-zinc-600 hover:text-zinc-400 transition-all"
-            >
-              <Pin
-                size={20}
-                className={cn(
-                  selectedNote?.isPinned ? "text-yellow-600" : "text-zinc-600"
-                )}
-              />
-            </button>
-
-            <button
-              title="Toggle theme"
-              type="button"
-              className="text-zinc-600 hover:text-zinc-400 transition-all"
-            >
-              <Sun size={20} />
-            </button>
-
-            {user ? (
-              <button
-                onClick={() => signOut()}
-                title="Log out"
-                type="button"
-                className="text-zinc-600 hover:text-zinc-400 transition-all"
-              >
-                <LogOut size={20} />
-              </button>
-            ) : (
-              <Link
-                title="Log in"
-                href="/auth"
-                className="text-zinc-600 hover:text-zinc-400 transition-all"
-              >
-                <LogIn size={20} />
-              </Link>
-            )}
-          </div>
+    <>
+      <nav className="flex items-center justify-between p-8 md:p-16">
+        <div className="relative flex items-center gap-3">
+          <button
+            type="button"
+            className="text-zinc-600 hover:text-zinc-400 transition-all"
+            onClick={() => setIsSidePanelOpen(true)}
+          >
+            <Menu size={20} />
+          </button>
+          <h1 className="font-bold text-zinc-300">Markky</h1>
+          <SidePanel
+            className="flex top-[calc(100%+20px)] w-[300px] left-0 absolute bg-zinc-900 z-10"
+            setIsSidePanelOpen={setIsSidePanelOpen}
+          />
         </div>
-        <EditContent />
-      </section>
-    </main>
+        <div className="flex items-center gap-3 md:ml-auto">
+          <button
+            onClick={handlePinNote}
+            title="Pin this note"
+            type="button"
+            className="text-zinc-600 hover:text-zinc-400 transition-all"
+          >
+            <Pin
+              size={20}
+              className={cn(
+                selectedNote?.isPinned ? "text-yellow-600" : "text-zinc-600"
+              )}
+            />
+          </button>
+
+          <button
+            title="Toggle theme"
+            type="button"
+            className="text-zinc-600 hover:text-zinc-400 transition-all"
+          >
+            <Sun size={20} />
+          </button>
+
+          {user ? (
+            <button
+              onClick={() => signOut()}
+              title="Log out"
+              type="button"
+              className="text-zinc-600 hover:text-zinc-400 transition-all"
+            >
+              <LogOut size={20} />
+            </button>
+          ) : (
+            <Link
+              title="Log in"
+              href="/auth"
+              className="text-zinc-600 hover:text-zinc-400 transition-all"
+            >
+              <LogIn size={20} />
+            </Link>
+          )}
+        </div>
+      </nav>
+      <main className="relative">
+        <section className="p-8 md:p-16 grow w-full">
+          <EditContent />
+        </section>
+      </main>
+    </>
   )
 }
