@@ -12,16 +12,17 @@ type SidePanelProps = {
 }
 
 export default function SidePanel({ className }: SidePanelProps) {
-  const { userNotes, user, setUserNotes } = useNotesStore()
+  const { userNotes, user, setUserNotes, setSelectedNote } = useNotesStore()
   const pinnedNotes: Note[] = userNotes.filter((note) => note.isPinned)
   const recentNotes: Note[] = userNotes.filter((note) => !note.isPinned)
 
   const handleCreateNew = async () => {
     try {
-      await createNote(user?._id || "")
+      const newNote = await createNote(user?._id || "")
       // refresh fetch? that's a bad idea literally. But let's try
       const userNotes = await getUserNotes(user?._id || "")
       setUserNotes(userNotes)
+      setSelectedNote(newNote)
     } catch (error: any) {
       console.log(error.message)
     }

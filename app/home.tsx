@@ -52,6 +52,7 @@ export default function Home({ initUser, initUserNotes }: HomeProps) {
   useEffect(() => {
     setUserNotes(initUserNotes)
     setUser(initUser)
+    setSelectedNote(initUserNotes[initUserNotes.length - 1])
   }, [])
 
   const handlePinNote = async () => {
