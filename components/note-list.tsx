@@ -5,6 +5,7 @@ import { X } from "lucide-react"
 import { useNotesStore } from "@/slices/use-notes-store"
 import { notes } from "@/data"
 import { cn } from "@/lib/utils"
+import { deleteNote, getUserNotes } from "@/actions"
 
 export default function NoteList({
   note,
@@ -13,16 +14,19 @@ export default function NoteList({
   note: any
   index: number
 }) {
-  const { setNoteId, noteId } = useNotesStore()
-  const isSelected = noteId === note.id
+  const { setSelectedNote, selectedNote, setUserNotes, user } = useNotesStore()
+  const isSelected = selectedNote?._id === note._id
 
-  const handleDeleteNote = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    e.stopPropagation()
-    e.preventDefault()
-    notes.splice(index, 1)
-    setNoteId(notes[0]?.id)
+  const handleDeleteNote = async () => {
+    try {
+      await deleteNote(note._id)
+
+      // refresh fetch? that's a bad idea literally. But let's try
+      const userNotes = await getUserNotes(user?._id || "")
+      setUserNotes(userNotes)
+    } catch (error: any) {
+      console.error(error.message)
+    }
   }
 
   return (
@@ -30,7 +34,7 @@ export default function NoteList({
       <span className="absolute -inset-y-1 -inset-x-2 transition-all group-hover:bg-zinc-800 rounded-md -z-10"></span>
       <button
         type="button"
-        onClick={() => setNoteId(note.id)}
+        onClick={() => setSelectedNote(note)}
         key={note.id}
         className=""
       >
@@ -45,7 +49,7 @@ export default function NoteList({
       </button>
       <button
         type="button"
-        onClick={(e) => handleDeleteNote(e)}
+        onClick={(e) => handleDeleteNote()}
         className="text-zinc-600 hover:text-zinc-400 transition-all opacity-0 group-hover:opacity-100"
       >
         <X size={20} />

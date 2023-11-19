@@ -25,5 +25,5 @@ export default async function page() {
 
   console.log({user, userNotes})
 
-  return <Home user={user} userNotes={userNotes}/>
+  return <Home initUser={user} initUserNotes={userNotes}/>
 }

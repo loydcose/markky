@@ -5,33 +5,34 @@ import { useNotesStore } from "@/slices/use-notes-store"
 import { notes } from "@/data"
 import DynamicTextarea from "./dynamic-textarea"
 import { useDebounce } from "@/hooks/use-debounce"
+import { getUserNotes, updateNote } from "@/actions"
 
 export default function EditContent() {
-  const { noteId } = useNotesStore()
-  const foundNote = notes.find((note) => noteId === note.id)
-  const [input, setInput] = useState(foundNote?.content || "")
+  const { selectedNote, setUserNotes, user } =
+    useNotesStore()
+  const [input, setInput] = useState(selectedNote?.content || "")
   const debouncedValue = useDebounce<string>(input, 1000)
 
   useEffect(() => {
-    setInput(foundNote?.content || "")
-  }, [noteId])
+    setInput(selectedNote?.content || "")
+  }, [selectedNote])
+
+  const updateContent = async () => {
+    if (!selectedNote) return
+
+    try {
+      await updateNote(selectedNote._id, { content: input })
+
+      // refresh fetch? that's a bad idea literally. But let's try
+      const userNotes = await getUserNotes(user?._id || "")
+      setUserNotes(userNotes)
+    } catch (error: any) {
+      console.log(error.message)
+    }
+  }
 
   useEffect(() => {
-    if (!foundNote) return
-
-    for (const noteItem of notes) {
-      const { id, title, createdAt, updatedAt, isPinned } = foundNote
-
-      if (noteItem.id === noteId) {
-        noteItem.id = id
-        noteItem.title = title
-        noteItem.content = input
-        noteItem.createdAt = createdAt
-        noteItem.updatedAt = updatedAt
-        noteItem.isPinned = isPinned
-        break
-      }
-    }
+    updateContent()
   }, [debouncedValue])
 
   return (

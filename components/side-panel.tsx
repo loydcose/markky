@@ -5,39 +5,31 @@ import { PanelLeftClose, X, LogOut, Github, Pin, Clock } from "lucide-react"
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react"
 import NoteList from "./note-list"
 import { useNotesStore } from "@/slices/use-notes-store"
+import { createNote, getUserNotes } from "@/actions"
 
 type SidePanelProps = {
   className?: string
   setIsSidePanelOpen: Dispatch<SetStateAction<boolean>>
-  userNotes: any[]
 }
 
 export default function SidePanel({
   className,
   setIsSidePanelOpen,
-  userNotes
 }: SidePanelProps) {
-  const { setNoteId, noteId } = useNotesStore()
-  const sortedNotes = userNotes.sort(
-    (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
-  )
+  const { userNotes, user, setUserNotes } = useNotesStore()
+  // const sortedNotes = userNotes.sort(
+  //   (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+  // )
 
-
-  const handleCreateNew = () => {
-    
-
-
-    const id = new Date().getTime()
-    const prop = {
-      id,
-      title: "Untitled " + id,
-      content: "",
-      isPinned: false,
-      createdAt: new Date().toString(),
-      updatedAt: new Date().toString(),
+  const handleCreateNew = async () => {
+    try {
+      await createNote(user?._id || "")
+      // refresh fetch? that's a bad idea literally. But let's try
+      const userNotes = await getUserNotes(user?._id || "")
+      setUserNotes(userNotes)
+    } catch (error: any) {
+      console.log(error.message)
     }
-    notes.push(prop)
-    setNoteId(id)
   }
 
   return (
@@ -66,10 +58,10 @@ export default function SidePanel({
 
       <Pin size={20} className="text-zinc-600 mb-3" />
       <ul className="flex flex-col gap-1 mb-10">
-        {sortedNotes.map((note, index) => {
+        {userNotes.map((note, index) => {
           return (
             note.isPinned && (
-              <NoteList key={note.id} note={note} index={index} />
+              <NoteList key={note._id} note={note} index={index} />
             )
           )
         })}
@@ -77,10 +69,10 @@ export default function SidePanel({
 
       <Clock size={20} className="text-zinc-600 mb-3" />
       <ul className="flex flex-col gap-1 mb-10">
-        {sortedNotes.map((note, index) => {
+        {userNotes.map((note, index) => {
           return (
             !note.isPinned && (
-              <NoteList key={note.id} note={note} index={index} />
+              <NoteList key={note._id} note={note} index={index} />
             )
           )
         })}

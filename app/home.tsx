@@ -14,49 +14,51 @@ import {
 import { signIn, signOut } from "next-auth/react"
 import SidePanel from "@/components/side-panel"
 import EditContent from "@/components/edit-content"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { cn } from "@/lib/utils"
 import { useNotesStore } from "@/slices/use-notes-store"
 import { notes } from "@/data"
 import { useSession } from "next-auth/react"
 import Link from "next/link"
+import { getUserNotes, updateNote } from "@/actions"
 
 type HomeProps = {
-  user: any
-  userNotes: any
+  initUser: User
+  initUserNotes: Note[]
 }
 
-export default function Home({user, userNotes}: HomeProps) {
+export default function Home({initUser, initUserNotes}: HomeProps) {
   const [isSidePanelOpen, setIsSidePanelOpen] = useState(false)
-  const { noteId } = useNotesStore()
-  const foundNote = notes.find((note) => noteId === note.id)
+  const { selectedNote, setUserNotes, setUser, user, userNotes, setSelectedNote } = useNotesStore()
 
-  const handlePinNote = () => {
-    if (!foundNote) return
+  useEffect(() => {
+    setUserNotes(initUserNotes)
+    setUser(initUser)
+  }, [])
 
-    for (const noteItem of notes) {
-      const { id, title, createdAt, updatedAt, isPinned, content } = foundNote
 
-      if (noteId === noteItem.id) {
-        noteItem.id = id
-        noteItem.title = title
-        noteItem.content = content
-        noteItem.createdAt = createdAt
-        noteItem.updatedAt = updatedAt
-        noteItem.isPinned = !isPinned
-        break
-      }
+  const handlePinNote = async () => {
+    if (!selectedNote) return
+
+    try {
+      await updateNote(selectedNote._id, { isPinned: !selectedNote.isPinned })
+
+      // refresh fetch? that's a bad idea literally. But let's try
+      const userNotesRes = await getUserNotes(user?._id || "")
+      setUserNotes(userNotesRes)
+      setSelectedNote(userNotesRes.find(note => selectedNote._id === note._id))
+    } catch (error: any) {
+      console.error(error.message)
     }
   }
 
-  // todo ikaalat mo nga yung mga db values, and modify mo narin yung mga functionalities
+
 
   return (
     <main className="flex relative">
       <SidePanel
         className="hidden md:flex top-0 w-[400px] shrink-0 sticky"
         setIsSidePanelOpen={setIsSidePanelOpen}
-        userNotes={userNotes}
       />
       <SidePanel
         className={cn(
@@ -64,7 +66,6 @@ export default function Home({user, userNotes}: HomeProps) {
           isSidePanelOpen ? "flex" : "hidden"
         )}
         setIsSidePanelOpen={setIsSidePanelOpen}
-        userNotes={userNotes}
       />
 
       <section className="p-8 md:p-16 grow w-full">
@@ -89,7 +90,7 @@ export default function Home({user, userNotes}: HomeProps) {
               <Pin
                 size={20}
                 className={cn(
-                  foundNote?.isPinned ? "text-yellow-600" : "text-zinc-600"
+                  selectedNote?.isPinned ? "text-yellow-600" : "text-zinc-600"
                 )}
               />
             </button>
