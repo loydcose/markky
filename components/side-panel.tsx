@@ -9,12 +9,10 @@ import { createNote, getUserNotes } from "@/actions"
 
 type SidePanelProps = {
   className?: string
-  setIsSidePanelOpen: Dispatch<SetStateAction<boolean>>
 }
 
 export default function SidePanel({
   className,
-  setIsSidePanelOpen,
 }: SidePanelProps) {
   const { userNotes, user, setUserNotes } = useNotesStore()
   // const sortedNotes = userNotes.sort(

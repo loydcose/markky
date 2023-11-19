@@ -67,14 +67,16 @@ export default function Home({ initUser, initUserNotes }: HomeProps) {
           <button
             type="button"
             className="text-zinc-600 hover:text-zinc-400 transition-all"
-            onClick={() => setIsSidePanelOpen(true)}
+            onClick={() => setIsSidePanelOpen((prev) => !prev)}
           >
-            <Menu size={20} />
+            {isSidePanelOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
           <h1 className="font-bold text-zinc-300">Markky</h1>
           <SidePanel
-            className="flex top-[calc(100%+20px)] w-[300px] left-0 absolute bg-zinc-900 z-10"
-            setIsSidePanelOpen={setIsSidePanelOpen}
+            className={cn(
+              "top-[calc(100%+20px)] w-[300px] left-0 absolute bg-zinc-900 z-10",
+              isSidePanelOpen ? "flex" : "hidden"
+            )}
           />
         </div>
         <div className="flex items-center gap-3 md:ml-auto">
