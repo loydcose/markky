@@ -36,7 +36,7 @@ export default function NoteList({
         type="button"
         onClick={() => setSelectedNote(note)}
         key={note.id}
-        className=""
+        className="w-full text-left"
       >
         <p
           className={cn(
