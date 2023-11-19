@@ -24,7 +24,7 @@ const DynamicTextarea: React.FC<DynamicTextareaProps> = ({ onChange, value, ...p
 
   return (
     <textarea
-      className='w-full mx-auto block max-w-[700px] bg-transparent text-zinc-400 resize-none outline-none placeholder:text-zinc-600 caret-yellow-600'
+      className='leading-6 w-full mx-auto block max-w-[700px] bg-transparent text-zinc-400 resize-none outline-none placeholder:text-zinc-600 caret-yellow-600'
       ref={textareaRef}
       rows={textareaRows + 4}
       value={value}

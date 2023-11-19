@@ -28,7 +28,7 @@ type HomeProps = {
 }
 
 export default function Home({ initUser, initUserNotes }: HomeProps) {
-  const [isSidePanelOpen, setIsSidePanelOpen] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
   const {
     selectedNote,
     setUserNotes,
@@ -37,6 +37,17 @@ export default function Home({ initUser, initUserNotes }: HomeProps) {
     userNotes,
     setSelectedNote,
   } = useNotesStore()
+
+  useEffect(() => {
+    const handleDocumentClick = () => setIsMenuOpen(false)
+
+    if (isMenuOpen) {
+      document.addEventListener("click", handleDocumentClick)
+    }
+    return () => {
+      document.removeEventListener("click", handleDocumentClick)
+    }
+  }, [isMenuOpen])
 
   useEffect(() => {
     setUserNotes(initUserNotes)
@@ -67,15 +78,15 @@ export default function Home({ initUser, initUserNotes }: HomeProps) {
           <button
             type="button"
             className="text-zinc-600 hover:text-zinc-400 transition-all"
-            onClick={() => setIsSidePanelOpen((prev) => !prev)}
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
-            {isSidePanelOpen ? <X size={20} /> : <Menu size={20} />}
+            {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
           <h1 className="font-bold text-zinc-300">Markky</h1>
           <SidePanel
             className={cn(
               "top-[calc(100%+20px)] w-[300px] left-0 absolute bg-zinc-900 z-10",
-              isSidePanelOpen ? "flex" : "hidden"
+              isMenuOpen ? "flex" : "hidden"
             )}
           />
         </div>
