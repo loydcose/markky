@@ -11,13 +11,10 @@ type SidePanelProps = {
   className?: string
 }
 
-export default function SidePanel({
-  className,
-}: SidePanelProps) {
+export default function SidePanel({ className }: SidePanelProps) {
   const { userNotes, user, setUserNotes } = useNotesStore()
-  // const sortedNotes = userNotes.sort(
-  //   (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
-  // )
+  const pinnedNotes: Note[] = userNotes.filter((note) => note.isPinned)
+  const recentNotes: Note[] = userNotes.filter((note) => !note.isPinned)
 
   const handleCreateNew = async () => {
     try {
@@ -45,27 +42,27 @@ export default function SidePanel({
         Create new
       </button>
 
-      <Pin size={20} className="text-zinc-600 mb-3" />
-      <ul className="flex flex-col gap-1 mb-10">
-        {userNotes.map((note, index) => {
-          return (
-            note.isPinned && (
-              <NoteList key={note._id} note={note} index={index} />
-            )
-          )
-        })}
-      </ul>
+      {!!pinnedNotes.length && (
+        <>
+          <Pin size={20} className="text-zinc-600 mb-3" />
+          <ul className="flex flex-col gap-1 mb-10">
+            {pinnedNotes.map((note, index) => {
+              return <NoteList key={note._id} note={note} index={index} />
+            })}
+          </ul>
+        </>
+      )}
 
-      <Clock size={20} className="text-zinc-600 mb-3" />
-      <ul className="flex flex-col gap-1 mb-10">
-        {userNotes.map((note, index) => {
-          return (
-            !note.isPinned && (
-              <NoteList key={note._id} note={note} index={index} />
-            )
-          )
-        })}
-      </ul>
+      {!!recentNotes.length && (
+        <>
+          <Clock size={20} className="text-zinc-600 mb-3" />
+          <ul className="flex flex-col gap-1 mb-10">
+            {recentNotes.map((note, index) => {
+              return <NoteList key={note._id} note={note} index={index} />
+            })}
+          </ul>
+        </>
+      )}
 
       <footer className="flex items-center gap-2 justify-between mt-auto">
         <p className="text-sm">Markky @ 2023</p>
