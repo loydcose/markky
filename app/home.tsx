@@ -30,9 +30,6 @@ export default function Home({user, userNotes}: HomeProps) {
   const [isSidePanelOpen, setIsSidePanelOpen] = useState(false)
   const { noteId } = useNotesStore()
   const foundNote = notes.find((note) => noteId === note.id)
-  const { data: session } = useSession()
-
-  // console.log({session})
 
   const handlePinNote = () => {
     if (!foundNote) return
@@ -52,11 +49,14 @@ export default function Home({user, userNotes}: HomeProps) {
     }
   }
 
+  // todo ikaalat mo nga yung mga db values, and modify mo narin yung mga functionalities
+
   return (
     <main className="flex relative">
       <SidePanel
         className="hidden md:flex top-0 w-[400px] shrink-0 sticky"
         setIsSidePanelOpen={setIsSidePanelOpen}
+        userNotes={userNotes}
       />
       <SidePanel
         className={cn(
@@ -64,6 +64,7 @@ export default function Home({user, userNotes}: HomeProps) {
           isSidePanelOpen ? "flex" : "hidden"
         )}
         setIsSidePanelOpen={setIsSidePanelOpen}
+        userNotes={userNotes}
       />
 
       <section className="p-8 md:p-16 grow w-full">
@@ -101,7 +102,7 @@ export default function Home({user, userNotes}: HomeProps) {
               <Sun size={20} />
             </button>
 
-            {session ? (
+            {user ? (
               <button
                 onClick={() => signOut()}
                 title="Log out"

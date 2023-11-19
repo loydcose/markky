@@ -9,19 +9,24 @@ import { useNotesStore } from "@/slices/use-notes-store"
 type SidePanelProps = {
   className?: string
   setIsSidePanelOpen: Dispatch<SetStateAction<boolean>>
+  userNotes: any[]
 }
 
 export default function SidePanel({
   className,
   setIsSidePanelOpen,
+  userNotes
 }: SidePanelProps) {
   const { setNoteId, noteId } = useNotesStore()
-  const sortedNotes = notes.sort(
+  const sortedNotes = userNotes.sort(
     (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
   )
 
 
   const handleCreateNew = () => {
+    
+
+
     const id = new Date().getTime()
     const prop = {
       id,

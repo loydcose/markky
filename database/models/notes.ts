@@ -8,14 +8,13 @@ const noteSchema = new Schema(
     },
     title: {
       type: String,
-      required: true,
       default: "Untitled"
     },
     content: {
       type: String,
     },
     isPinned: {
-      type: String,
+      type: Boolean,
       required: true,
       default: false,
     },
