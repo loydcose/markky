@@ -15,7 +15,7 @@ export default function Auth() {
           <div className="flex items-center gap-4 justify-center mb-6">
             <button
               onClick={() =>
-                signIn("google", { callbackUrl: "http://localhost:3000" })
+                signIn("google", { callbackUrl: process.env.NEXTAUTH_URL })
               }
               title="Sign in with Google"
               type="button"
@@ -25,7 +25,7 @@ export default function Auth() {
             </button>
             <button
               onClick={() =>
-                signIn("github", { callbackUrl: "http://localhost:3000" })
+                signIn("github", { callbackUrl: process.env.NEXTAUTH_URL })
               }
               title="Sign in with Github"
               type="button"
