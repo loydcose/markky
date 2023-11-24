@@ -9,6 +9,7 @@ export default function EditNoteTitle() {
   const { selectedNote, user, setUserNotes } = useNotesStore()
   const [input, setInput] = useState(selectedNote?.title || "Untitled")
   const debouncedValue = useDebounce<string>(input, 1000)
+  const maxLength = 34
 
   useEffect(() => {
     setInput(selectedNote?.title || "")
@@ -17,6 +18,7 @@ export default function EditNoteTitle() {
   const updateContent = async () => {
     if (!selectedNote) return
     if (!input.trim()) return
+    if (input.length > maxLength) return
 
     try {
       await updateNote(selectedNote._id, { title: input })
@@ -28,7 +30,7 @@ export default function EditNoteTitle() {
       console.log(error.message)
     }
   }
-
+// Ok this is a title for this note
   useEffect(() => {
     updateContent()
   }, [debouncedValue])
@@ -37,9 +39,10 @@ export default function EditNoteTitle() {
     <div className="w-full mx-auto max-w-[700px]">
       <input
         type="text"
-        className="block min-w-0  outline-none bg-transparent text-zinc-400"
+        className="block min-w-0 w-full outline-none bg-transparent text-zinc-400"
         value={input}
         onChange={(e) => setInput(e.target.value)}
+        maxLength={maxLength}
       />
       <hr className="border-none h-px bg-zinc-800 mt-4 mb-8" />
     </div>
