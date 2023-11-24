@@ -21,6 +21,7 @@ import { notes } from "@/data"
 import { useSession } from "next-auth/react"
 import Link from "next/link"
 import { getUserNotes, updateNote } from "@/actions"
+import EditNoteTitle from "@/components/edit-note-title"
 
 type HomeProps = {
   initUser: User
@@ -136,6 +137,7 @@ export default function Home({ initUser, initUserNotes }: HomeProps) {
       </nav>
       <main className="relative">
         <section className="p-8 md:p-16 grow w-full">
+          <EditNoteTitle/>
           <EditContent />
         </section>
       </main>
