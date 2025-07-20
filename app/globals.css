@@ -2,3 +2,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.editor-js-formats {
+    h1 {
+      @apply text-4xl font-bold;
+    }
+    h2 {
+      @apply text-3xl font-bold;
+    }
+    h3 {
+      @apply text-2xl font-bold;
+    }
+  }
+  
