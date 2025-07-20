@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
   PanelLeftClose,
@@ -10,26 +10,26 @@ import {
   Menu,
   Pin,
   LogIn,
-} from "lucide-react"
-import { signIn, signOut } from "next-auth/react"
-import SidePanel from "@/components/side-panel"
-import EditContent from "@/components/edit-content"
-import { useEffect, useState } from "react"
-import { cn } from "@/lib/utils"
-import { useNotesStore } from "@/slices/use-notes-store"
-import { notes } from "@/data"
-import { useSession } from "next-auth/react"
-import Link from "next/link"
-import { getUserNotes, updateNote } from "@/actions"
-import EditNoteTitle from "@/components/edit-note-title"
+} from "lucide-react";
+import { signIn, signOut } from "next-auth/react";
+import SidePanel from "@/app/sample/side-panel";
+import EditContent from "@/components/edit-content";
+import { useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
+import { useNotesStore } from "@/slices/use-notes-store";
+import { notes } from "@/data";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
+import { getUserNotes, updateNote } from "@/actions";
+import EditNoteTitle from "@/components/edit-note-title";
 
 type HomeProps = {
-  initUser: User
-  initUserNotes: Note[]
-}
+  initUser: User;
+  initUserNotes: Note[];
+};
 
 export default function Home({ initUser, initUserNotes }: HomeProps) {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const {
     selectedNote,
     setUserNotes,
@@ -37,41 +37,41 @@ export default function Home({ initUser, initUserNotes }: HomeProps) {
     user,
     userNotes,
     setSelectedNote,
-  } = useNotesStore()
+  } = useNotesStore();
 
   useEffect(() => {
-    const handleDocumentClick = () => setIsMenuOpen(false)
+    const handleDocumentClick = () => setIsMenuOpen(false);
 
     if (isMenuOpen) {
-      document.addEventListener("click", handleDocumentClick)
+      document.addEventListener("click", handleDocumentClick);
     }
     return () => {
-      document.removeEventListener("click", handleDocumentClick)
-    }
-  }, [isMenuOpen])
+      document.removeEventListener("click", handleDocumentClick);
+    };
+  }, [isMenuOpen]);
 
   useEffect(() => {
-    setUserNotes(initUserNotes)
-    setUser(initUser)
-    setSelectedNote(initUserNotes[initUserNotes.length - 1])
-  }, [])
+    setUserNotes(initUserNotes);
+    setUser(initUser);
+    setSelectedNote(initUserNotes[initUserNotes.length - 1]);
+  }, []);
 
   const handlePinNote = async () => {
-    if (!selectedNote) return
+    if (!selectedNote) return;
 
     try {
-      await updateNote(selectedNote._id, { isPinned: !selectedNote.isPinned })
+      await updateNote(selectedNote._id, { isPinned: !selectedNote.isPinned });
 
       // refresh fetch? that's a bad idea literally. But let's try
-      const userNotesRes = await getUserNotes(user?._id || "")
-      setUserNotes(userNotesRes)
+      const userNotesRes = await getUserNotes(user?._id || "");
+      setUserNotes(userNotesRes);
       setSelectedNote(
         userNotesRes.find((note) => selectedNote._id === note._id)
-      )
+      );
     } catch (error: any) {
-      console.error(error.message)
+      console.error(error.message);
     }
-  }
+  };
 
   return (
     <>
@@ -137,10 +137,10 @@ export default function Home({ initUser, initUserNotes }: HomeProps) {
       </nav>
       <main className="relative">
         <section className="p-8 md:p-16 grow w-full">
-          <EditNoteTitle/>
+          <EditNoteTitle />
           <EditContent />
         </section>
       </main>
     </>
-  )
+  );
 }
