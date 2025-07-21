@@ -118,9 +118,10 @@ export const deleteEditor = async (editorId: string) => {
   return editor;
 };
 
-export const getUserEditor = async (userId: string) => {
+export const getUserEditor = async (userId: string, editorId: string) => {
   await validateId(userId);
-  const foundEditor = await Editor.find({ ownerId: userId });
+  await validateId(editorId);
+  const foundEditor = await Editor.findOne({ ownerId: userId, _id: editorId });
 
   return foundEditor;
 };

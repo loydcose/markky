@@ -53,7 +53,7 @@ export default async function page({ params }: { params: { slug: string } }) {
       {activeEditor !== null ? (
         // <div className="size-full flex">{activeEditor.title}</div>
         <div className="size-full flex">
-          <NoteEditor activeEditor={activeEditor} />
+          <NoteEditor userId={user._id} activeEditor={activeEditor} />
         </div>
       ) : (
         <div className="size-full flex">

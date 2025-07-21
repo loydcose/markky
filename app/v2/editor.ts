@@ -51,9 +51,11 @@ const tools = {
   },
 };
 
-const getEditorData = async (userId: string) => {
-  const userEditor: Editor[] = await getUserEditor(userId);
-  const parsedData = userEditor[0].content;
+const getEditorData = async (userId: string, editorId: string) => {
+  const userEditor: Editor = await getUserEditor(userId, editorId);
+  const parsedData = userEditor.content;
+
+  console.log({parsedData})
 
   if (
     parsedData ||
@@ -84,7 +86,7 @@ const initEditor = async (userId: string, editorId: string) => {
       // localStorage.setItem("editorData", JSON.stringify(data))
     },
     tools: tools,
-    data: await getEditorData(userId),
+    data: await getEditorData(userId, editorId),
   });
 };
 export { initEditor };
