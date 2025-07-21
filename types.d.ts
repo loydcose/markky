@@ -20,6 +20,7 @@ type Editor = {
   ownerId: string;
   title: string;
   content: Json;
+  slug: string
   isPinned: Boolean;
   createdAt: date;
   updatedAt: date;

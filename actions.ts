@@ -73,6 +73,7 @@ export const createEditor = async (userId: string) => {
   try {
     const editor = await Editor.create({
       ownerId: userId,
+      slug: `Untitled-${Date.now()}`,
     });
 
     return editor;
@@ -105,6 +106,16 @@ export const updateEditor = async (
     throw new Error(error)
     return null;
   }
+};
+
+export const deleteEditor = async (editorId: string) => {
+  await validateId(editorId);
+
+  const editor = await Editor.deleteOne({
+    _id: editorId,
+  });
+
+  return editor;
 };
 
 export const getUserEditor = async (userId: string) => {

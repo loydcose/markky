@@ -1,25 +1,35 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ChevronLeft, ChevronRight, Plus, LogOut, User } from "lucide-react";
 import { NoteItem } from "./NoteItem";
-import React from "react";
-
-type Note = { id: number; title: string };
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { createEditor } from "@/actions";
 
 type SidebarPanelProps = {
-  sidebarCollapsed: boolean;
-  setSidebarCollapsed: (collapsed: boolean) => void;
-  favoriteNotes: Note[];
-  regularNotes: Note[];
+  user: any;
+  favoriteNotes: Editor[];
+  regularNotes: Editor[];
 };
 
 export function SidebarPanel({
-  sidebarCollapsed,
-  setSidebarCollapsed,
+  user,
   favoriteNotes,
   regularNotes,
 }: SidebarPanelProps) {
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const router = useRouter();
+
+  const handleClick = async () => {
+    const res = await createEditor(user._id);
+    console.log(res.slug);
+    router.push("/sample/" + res.slug);
+  };
+
+
   return (
     <div
       className={`relative transition-all duration-300 ${
@@ -47,7 +57,7 @@ export function SidebarPanel({
             <div className="h-8 w-8 shrink-0 rounded-full bg-gray-200 flex items-center justify-center">
               <User className="h-4 w-4 text-gray-600" />
             </div>
-            <span className="font-medium">Loyd Cose</span>
+            <span className="font-medium">{user.name}</span>
           </div>
 
           {/* Favorites Section */}
@@ -55,11 +65,17 @@ export function SidebarPanel({
             <h3 className="text-sm font-medium text-gray-600 mb-3">
               Favorites
             </h3>
-            <div className="space-y-2">
-              {favoriteNotes.map((note) => (
-                <NoteItem key={note.id} note={note} isFavorite={true} />
-              ))}
-            </div>
+            {favoriteNotes.length === 0 ? (
+              <p className="text-xs text-zinc-400">
+                Favorite notes will go here.
+              </p>
+            ) : (
+              <div className="space-y-2">
+                {favoriteNotes.map((note) => (
+                  <NoteItem key={note._id} note={note} isFavorite={true} user={user} />
+                ))}
+              </div>
+            )}
           </div>
 
           <Separator className="bg-gray-200 mb-6" />
@@ -68,20 +84,18 @@ export function SidebarPanel({
           <div className="flex-1">
             <h3 className="text-sm font-medium text-gray-600 mb-3">Notes</h3>
             <ScrollArea className="h-full">
-              <div className="space-y-2 pr-4">
+              <div className="space-y-2">
                 {regularNotes.map((note) => (
-                  <NoteItem key={note.id} note={note} />
+                  <NoteItem key={note._id} note={note} user={user}/>
                 ))}
               </div>
+              <div className="mt-4">
+                <Button className="w-full bg-gray-900 hover:bg-gray-800 text-white" onClick={handleClick}>
+                  <Plus className="h-4 w-4 mr-2" />
+                  New
+                </Button>
+              </div>
             </ScrollArea>
-          </div>
-
-          {/* New Note Button */}
-          <div className="mt-4">
-            <Button className="w-full bg-gray-900 hover:bg-gray-800 text-white">
-              <Plus className="h-4 w-4 mr-2" />
-              New
-            </Button>
           </div>
 
           {/* Logout Button */}

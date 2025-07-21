@@ -1,20 +1,31 @@
+"use client";
+
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useDebounce } from "@/hooks/use-debounce";
+import { updateEditor } from "@/actions";
+import { revalidatePath } from "next/cache";
 
 type NoteEditorProps = {
-  noteTitle: string;
-  setNoteTitle: (title: string) => void;
-  editorContent: string;
-  setEditorContent: (content: string) => void;
+  activeEditor: Editor;
 };
 
-export function NoteEditor({
-  noteTitle,
-  setNoteTitle,
-  editorContent,
-  setEditorContent,
-}: NoteEditorProps) {
+export function NoteEditor({ activeEditor }: NoteEditorProps) {
+  const [noteTitle, setNoteTitle] = useState(activeEditor.title);
+  const [editorContent, setEditorContent] = useState("");
+  const debouncedNoteTitle = useDebounce(noteTitle, 500);
+
+  useEffect(() => {
+    if (debouncedNoteTitle) {
+      updateEditor(activeEditor._id, { title: debouncedNoteTitle });
+    }
+  }, [debouncedNoteTitle, activeEditor._id]);
+
+  useEffect(() => {
+    setNoteTitle(activeEditor.title);
+  }, [activeEditor]);
+
   return (
     <div className="flex-1 flex flex-col bg-white">
       {/* Header */}

@@ -9,6 +9,12 @@ const editorSchema = new Schema(
     title: {
       type: String,
       default: "Untitled",
+      required: true,
+    },
+    slug: {
+      type: String,
+      unique: true,
+      required: true,
     },
     content: {
       type: JSON,

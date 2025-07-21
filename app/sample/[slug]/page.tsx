@@ -3,14 +3,15 @@ import { getServerSession } from "next-auth";
 import { User } from "@/database/models/user";
 import { Note } from "@/database/models/notes";
 import dbConnect from "@/database/db-connect";
-import { authOptions } from "../api/auth/[...nextauth]/route";
 import { Editor } from "@/database/models/editor";
 import { Button } from "@/components/ui/button";
-import { SidebarPanel } from "./SidebarPanel";
 import { Plus } from "lucide-react";
-import { redirect } from "next/navigation";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { SidebarPanel } from "../SidebarPanel";
+import { NoteEditor } from "../NoteEditor";
 
-export default async function page() {
+export default async function page({ params }: { params: { slug: string } }) {
+  console.log(params);
   const session = await getServerSession(authOptions);
   await dbConnect();
   const sessionUser = session?.user;
@@ -29,15 +30,15 @@ export default async function page() {
     ownerId: user._id.toString(),
     isPinned: true,
   });
+  const activeEditor = await Editor.findOne({ slug: params.slug });
+  console.log({ activeEditor });
 
   // const [noteTitle, setNoteTitle] = useState("Hellow orld!");
   // const [editorContent, setEditorContent] = useState("");
 
   const handleClick = async () => {
-    "use server"
-    const res = await createEditor(user._id);
-    console.log(res.slug)
-    redirect("/sample/" + res.slug);
+    // const res = await createEditor(user._id)
+    // console.log(res)
   };
 
   return (
@@ -49,14 +50,16 @@ export default async function page() {
         regularNotes={regularNotes}
       />
 
-      <div className="size-full flex">
-        <form action={handleClick} className="m-auto flex flex-col gap-3">
-          Ready to create a note?
-          <Button variant={"outline"}>
-            Create a note <Plus />
-          </Button>
-        </form>
-      </div>
+      {activeEditor !== null ? (
+        // <div className="size-full flex">{activeEditor.title}</div>
+        <div className="size-full flex">
+          <NoteEditor activeEditor={activeEditor} />
+        </div>
+      ) : (
+        <div className="size-full flex">
+          Seems like we didn't find your notes
+        </div>
+      )}
 
       {/* <NoteEditor
         noteTitle={noteTitle}

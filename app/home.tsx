@@ -12,7 +12,6 @@ import {
   LogIn,
 } from "lucide-react";
 import { signIn, signOut } from "next-auth/react";
-import SidePanel from "@/app/sample/side-panel";
 import EditContent from "@/components/edit-content";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
@@ -22,6 +21,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { getUserNotes, updateNote } from "@/actions";
 import EditNoteTitle from "@/components/edit-note-title";
+import SidePanel from "@/components/side-panel";
 
 type HomeProps = {
   initUser: User;
