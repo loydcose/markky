@@ -8,6 +8,7 @@ import { redirect } from "next/navigation";
 import { authOptions } from "./api/auth/[...nextauth]/route";
 import { SidebarPanel } from "@/components/SidebarPanel";
 import { dbConnect } from "@/database/db-connect";
+import SaveEditorsToStore from "@/components/save-editors-to-store";
 
 export default async function page() {
   const session = await getServerSession(authOptions);
@@ -24,30 +25,18 @@ export default async function page() {
 
   const regularNotes = await Editor.find({
     ownerId: user._id.toString(),
-    isPinned: false,
-  });
-
-  console.log(regularNotes)
-
-  const favoriteNotes = await Editor.find({
-    ownerId: user._id.toString(),
-    isPinned: true,
   });
 
   return (
     <div className="flex h-screen bg-gray-50 text-gray-900">
-      <SidebarPanel
-        user={user}
-        favoriteNotes={favoriteNotes}
-        regularNotes={regularNotes}
-      />
+      <SidebarPanel user={user} />
 
       <div className="size-full flex">
         <form
           action={async () => {
             "use server";
             const res = await createEditor(user._id);
-            redirect("/" + res.slug);
+            redirect("/" + res.slug + "?new=true");
           }}
           className="m-auto flex flex-col gap-3"
         >
@@ -55,6 +44,7 @@ export default async function page() {
           <Button variant={"outline"}>
             Create a note <Plus />
           </Button>
+          <SaveEditorsToStore editors={regularNotes} />
         </form>
       </div>
     </div>

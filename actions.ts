@@ -3,7 +3,7 @@
 import mongoose from "mongoose";
 import { User } from "./database/models/user";
 import { Editor } from "./database/models/editor";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { dbConnect } from "./database/db-connect";
 
 const validateId = async (id: string) => {
@@ -32,7 +32,6 @@ export const createEditor = async (userId: string) => {
     return editor;
   } catch (error: any) {
     console.error(error);
-    return null;
   }
 };
 
@@ -55,9 +54,7 @@ export const updateEditor = async (
     return editor;
   } catch (error: any) {
     console.error(error);
-    console.log("threw an error!")
-    throw new Error(error)
-    return null;
+    throw new Error(error);
   }
 };
 
@@ -79,7 +76,10 @@ export const getUserEditor = async (userId: string, editorId: string) => {
   return foundEditor;
 };
 
-
 export const revalidateByPath = async (path: string) => {
-  revalidatePath(path)
-}
+  revalidatePath(path);
+};
+
+export const revalidateByTag = async (tag: string) => {
+  revalidateTag(tag);
+};

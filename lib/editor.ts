@@ -55,15 +55,12 @@ const getEditorData = async (userId: string, editorId: string) => {
   const userEditor: Editor = await getUserEditor(userId, editorId);
   const parsedData = userEditor.content;
 
-  console.log({parsedData})
-
   if (
     parsedData ||
     parsedData?.blocks ||
     parsedData?.time ||
     parsedData?.version
   ) {
-    console.log(parsedData);
     return parsedData;
   }
   return {};
@@ -71,17 +68,15 @@ const getEditorData = async (userId: string, editorId: string) => {
 
 const initEditor = async (userId: string, editorId: string) => {
   const editor = new EditorJS({
-    autofocus: true,
+    // autofocus: true,
     holder: "editorjs",
     onReady: () => {
       console.log("Editor.js is ready to work");
     },
     onChange: async (api, event) => {
       const data = await editor.save();
-      console.log({ userId, editorId });
 
       const result = await updateEditor(editorId, { content: data });
-      console.log({ result });
 
       // localStorage.setItem("editorData", JSON.stringify(data))
     },

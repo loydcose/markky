@@ -7,13 +7,14 @@ import EditorJs from "./editor-js";
 type NoteEditorProps = {
   userId: string;
   activeEditor: Editor;
+  isNewEditor: boolean;
 };
 
-export function NoteEditor({ userId, activeEditor }: NoteEditorProps) {
+export function NoteEditor({ userId, activeEditor, isNewEditor }: NoteEditorProps) {
   return (
     <div className="flex-1 flex flex-col bg-white">
       <div className="p-6">
-        <EditTitle userId={userId} activeEditor={activeEditor} />
+        <EditTitle userId={userId} activeEditor={activeEditor} isNewEditor={isNewEditor}/>
       </div>
 
       <div className="flex-1 p-6">

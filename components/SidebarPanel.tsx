@@ -8,27 +8,23 @@ import { NoteItem } from "./NoteItem";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createEditor } from "@/actions";
+import { useEditorStore } from "@/slices/editors-store";
 
 type SidebarPanelProps = {
   user: any;
-  favoriteNotes: Editor[];
-  regularNotes: Editor[];
 };
 
 export function SidebarPanel({
   user,
-  favoriteNotes,
-  regularNotes,
 }: SidebarPanelProps) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const { editors } = useEditorStore();
   const router = useRouter();
 
   const handleClick = async () => {
     const res = await createEditor(user._id);
-    console.log(res.slug);
-    router.push("/" + res.slug);
+    router.push("/" + res.slug + "?new=true");
   };
-
 
   return (
     <div
@@ -65,14 +61,19 @@ export function SidebarPanel({
             <h3 className="text-sm font-medium text-gray-600 mb-3">
               Favorites
             </h3>
-            {favoriteNotes.length === 0 ? (
+            {editors.filter(x => x.isPinned).length === 0 ? (
               <p className="text-xs text-zinc-400">
                 Favorite notes will go here.
               </p>
             ) : (
               <div className="space-y-2">
-                {favoriteNotes.map((note) => (
-                  <NoteItem key={note._id} note={note} isFavorite={true} user={user} />
+                {editors.filter(x => x.isPinned).map((note) => (
+                  <NoteItem
+                    key={note._id}
+                    note={note}
+                    isFavorite={true}
+                    user={user}
+                  />
                 ))}
               </div>
             )}
@@ -85,12 +86,15 @@ export function SidebarPanel({
             <h3 className="text-sm font-medium text-gray-600 mb-3">Notes</h3>
             <ScrollArea className="h-full">
               <div className="space-y-2">
-                {regularNotes.map((note) => (
-                  <NoteItem key={note._id} note={note} user={user}/>
+                {editors.map((note) => (
+                  <NoteItem key={note._id} note={note} user={user} />
                 ))}
               </div>
               <div className="mt-4">
-                <Button className="w-full bg-gray-900 hover:bg-gray-800 text-white" onClick={handleClick}>
+                <Button
+                  className="w-full bg-gray-900 hover:bg-gray-800 text-white"
+                  onClick={handleClick}
+                >
                   <Plus className="h-4 w-4 mr-2" />
                   New
                 </Button>
