@@ -1,13 +1,13 @@
-import { create } from "zustand"
+import { create } from "zustand";
 
 type Store = {
-  user: User | null
-  setUser: (user: User) => void
-  selectedNote: Note | null
-  setSelectedNote: (note: Note) => void
-  userNotes: Note[]
-  setUserNotes: (notes: Note[]) => void
-}
+  user: User | null;
+  setUser: (user: User) => void;
+  selectedNote: Note | null;
+  setSelectedNote: (note: Note) => void;
+  userNotes: Note[];
+  setUserNotes: (notes: Note[]) => void;
+};
 
 export const useNotesStore = create<Store>()((set) => ({
   user: null,
@@ -18,4 +18,4 @@ export const useNotesStore = create<Store>()((set) => ({
 
   userNotes: [],
   setUserNotes: (notes) => set((state) => ({ userNotes: notes })),
-}))
+}));

@@ -5,6 +5,7 @@ import dbConnect from "./database/db-connect";
 import { Note } from "./database/models/notes";
 import { User } from "./database/models/user";
 import { Editor } from "./database/models/editor";
+import { revalidatePath } from "next/cache";
 
 const validateId = async (id: string) => {
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -125,3 +126,8 @@ export const getUserEditor = async (userId: string, editorId: string) => {
 
   return foundEditor;
 };
+
+
+export const revalidateByPath = async (path: string) => {
+  revalidatePath(path)
+}

@@ -18,7 +18,7 @@ export function NoteEditor({ userId, activeEditor }: NoteEditorProps) {
       {/* Header */}
       <div className="p-6 border-b border-gray-200">
         <h2 className="text-lg font-medium text-gray-600 mb-4">My notes</h2>
-        <EditTitle activeEditor={activeEditor} />
+        <EditTitle userId={userId} activeEditor={activeEditor} />
       </div>
 
       {/* Editor Content */}

@@ -22,7 +22,7 @@ const editorSchema = new Schema(
     isPinned: {
       type: Boolean,
       required: true,
-      default: false,
+      default: false, // Used for favorites ("pinned"/favorite notes)
     },
   },
   { timestamps: true }
