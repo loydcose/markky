@@ -1,12 +1,10 @@
-import { createEditor, deleteEditor, updateEditor } from "@/actions";
+import { deleteEditor, updateEditor } from "@/actions";
 import { Button } from "@/components/ui/button";
 import { Heart, Trash2 } from "lucide-react";
-import { revalidatePath } from "next/cache";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
-import { useNotesStore } from "@/slices/use-notes-store";
-import { useNoteTitleStore } from "./note-title-store";
+import { useNoteTitleStore } from "../slices/note-title-store";
 
 export function NoteItem({
   note,
@@ -37,7 +35,7 @@ export function NoteItem({
   return (
     <div className="group flex items-center gap-2 px-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition-colors">
       <Link
-        href={`/sample/${note.slug}`}
+        href={`/${note.slug}`}
         className="flex-1 text-sm text-gray-900 truncate py-2"
       >
         {title}

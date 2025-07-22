@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import React, { useEffect, useState } from "react";
 import { useDebounce } from "@/hooks/use-debounce";
 import { getUserEditor, revalidateByPath, updateEditor } from "@/actions";
-import { useNoteTitleStore } from "./note-title-store";
+import { useNoteTitleStore } from "../slices/note-title-store";
 import { useRouter } from "next/navigation";
 
 type EditTitleProps = {
@@ -21,7 +21,7 @@ export function EditTitle({ userId, activeEditor }: EditTitleProps) {
   useEffect(() => {
     if (debouncedNoteTitle && debouncedNoteTitle !== activeEditor.title) {
       updateEditor(activeEditor._id, { title: debouncedNoteTitle });
-      revalidateByPath("/sample/" + activeEditor.slug);
+      revalidateByPath("/" + activeEditor.slug);
     }
   }, [debouncedNoteTitle, activeEditor._id, activeEditor.title]);
 
@@ -38,7 +38,7 @@ export function EditTitle({ userId, activeEditor }: EditTitleProps) {
     <Input
       value={noteTitle}
       onChange={handleChange}
-      className="text-xl font-medium bg-transparent border-none p-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-gray-900 placeholder:text-gray-400"
+      className="text-2xl font-bold bg-transparent border-none p-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-gray-900 placeholder:text-gray-400"
       placeholder="Enter note title..."
     />
   );

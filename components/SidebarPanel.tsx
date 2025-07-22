@@ -26,7 +26,7 @@ export function SidebarPanel({
   const handleClick = async () => {
     const res = await createEditor(user._id);
     console.log(res.slug);
-    router.push("/sample/" + res.slug);
+    router.push("/" + res.slug);
   };
 
 

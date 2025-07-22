@@ -1,20 +1,16 @@
-import { createEditor, getUser, getUserNotes } from "@/actions";
 import { getServerSession } from "next-auth";
 import { User } from "@/database/models/user";
-import { Note } from "@/database/models/notes";
-import dbConnect from "@/database/db-connect";
 import { Editor } from "@/database/models/editor";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { SidebarPanel } from "../SidebarPanel";
-import { NoteEditor } from "../NoteEditor";
+import { SidebarPanel } from "../../components/SidebarPanel";
+import { NoteEditor } from "../../components/NoteEditor";
+import { dbConnect } from "@/database/db-connect";
 
 export default async function page({ params }: { params: { slug: string } }) {
-  console.log(params);
   const session = await getServerSession(authOptions);
-  await dbConnect();
   const sessionUser = session?.user;
+
+  await dbConnect();
   let user = await User.findOne({ email: sessionUser?.email });
   if (!user) {
     user = await User.create({
@@ -31,19 +27,9 @@ export default async function page({ params }: { params: { slug: string } }) {
     isPinned: true,
   });
   const activeEditor = await Editor.findOne({ slug: params.slug });
-  console.log({ activeEditor });
-
-  // const [noteTitle, setNoteTitle] = useState("Hellow orld!");
-  // const [editorContent, setEditorContent] = useState("");
-
-  const handleClick = async () => {
-    // const res = await createEditor(user._id)
-    // console.log(res)
-  };
 
   return (
     <div className="flex h-screen bg-gray-50 text-gray-900">
-      {/* Sidebar */}
       <SidebarPanel
         user={user}
         favoriteNotes={favoriteNotes}
@@ -51,7 +37,6 @@ export default async function page({ params }: { params: { slug: string } }) {
       />
 
       {activeEditor !== null ? (
-        // <div className="size-full flex">{activeEditor.title}</div>
         <div className="size-full flex">
           <NoteEditor userId={user._id} activeEditor={activeEditor} />
         </div>
@@ -60,13 +45,6 @@ export default async function page({ params }: { params: { slug: string } }) {
           Seems like we didn't find your notes
         </div>
       )}
-
-      {/* <NoteEditor
-        noteTitle={noteTitle}
-        setNoteTitle={setNoteTitle}
-        editorContent={editorContent}
-        setEditorContent={setEditorContent}
-      /> */}
     </div>
   );
 }

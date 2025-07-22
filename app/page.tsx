@@ -1,29 +1,62 @@
-import { getUser, getUserNotes } from "@/actions"
-import Home from "./home"
-import { getServerSession } from "next-auth"
-import { authOptions } from "./api/auth/[...nextauth]/route"
-import { User } from "@/database/models/user"
-import { Note } from "@/database/models/notes"
-import dbConnect from "@/database/db-connect"
+import { createEditor } from "@/actions";
+import { getServerSession } from "next-auth";
+import { User } from "@/database/models/user";
+import { Editor } from "@/database/models/editor";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import { redirect } from "next/navigation";
+import { authOptions } from "./api/auth/[...nextauth]/route";
+import { SidebarPanel } from "@/components/SidebarPanel";
+import { dbConnect } from "@/database/db-connect";
 
 export default async function page() {
-  // get email from next-auth example: "user1@gmail.com"
-  // if that email is exist on the db, get its collection
-  // if not, create a new one
-  // use that id to find his notes on our db
-  const session = await getServerSession(authOptions)
-  await dbConnect()
-  const sessionUser = session?.user
-  let user = await User.findOne({ email: sessionUser?.email })
+  const session = await getServerSession(authOptions);
+  const sessionUser = session?.user;
+
+  await dbConnect();
+  let user = await User.findOne({ email: sessionUser?.email });
   if (!user) {
     user = await User.create({
       email: sessionUser?.email,
       name: sessionUser?.name,
-    })
+    });
   }
-  const userNotes = await Note.find({ ownerId: user._id.toString() });
 
-  console.log({user, userNotes})
+  const regularNotes = await Editor.find({
+    ownerId: user._id.toString(),
+    isPinned: false,
+  });
 
-  return <Home initUser={user} initUserNotes={userNotes}/>
+  console.log(regularNotes)
+
+  const favoriteNotes = await Editor.find({
+    ownerId: user._id.toString(),
+    isPinned: true,
+  });
+
+  return (
+    <div className="flex h-screen bg-gray-50 text-gray-900">
+      <SidebarPanel
+        user={user}
+        favoriteNotes={favoriteNotes}
+        regularNotes={regularNotes}
+      />
+
+      <div className="size-full flex">
+        <form
+          action={async () => {
+            "use server";
+            const res = await createEditor(user._id);
+            redirect("/" + res.slug);
+          }}
+          className="m-auto flex flex-col gap-3"
+        >
+          <p>Ready to create a note?</p>
+          <Button variant={"outline"}>
+            Create a note <Plus />
+          </Button>
+        </form>
+      </div>
+    </div>
+  );
 }

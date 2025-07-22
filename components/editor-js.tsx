@@ -1,6 +1,6 @@
 "use client";
 
-import { initEditor } from "./editor";
+import { initEditor } from "../lib/editor";
 import React, { useEffect, useState } from "react";
 
 export default function EditorJs({
