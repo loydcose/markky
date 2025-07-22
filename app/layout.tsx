@@ -24,7 +24,7 @@ export default async function RootLayout({
     <html lang="en">
       <body
         className={
-          notoSansMono.className +
+          inter.className +
           " min-h-screen bg-white dark:bg-zinc-900 text-sm md:text-base font-medium"
         }
       >

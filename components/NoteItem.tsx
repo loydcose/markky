@@ -1,5 +1,6 @@
 import {
   deleteEditor as deleteEditorAction,
+  revalidateByTag,
   updateEditor,
 } from "@/actions";
 import { Button } from "@/components/ui/button";
@@ -24,12 +25,14 @@ export function NoteItem({
   const handleDelete = async () => {
     deleteEditor(note._id);
     await deleteEditorAction(note._id);
+    revalidateByTag("notes");
     router.replace("/");
   };
 
   const handleFavorite = async () => {
     favoriteEditor(note._id, !note.isPinned);
     await updateEditor(note._id, { isPinned: !note.isPinned });
+    revalidateByTag("notes");
   };
 
   return (
