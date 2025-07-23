@@ -1,7 +1,7 @@
 "use client";
 
 import { initEditor } from "../lib/editor";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 export default function EditorJs({
   userId,
@@ -10,7 +10,11 @@ export default function EditorJs({
   userId: string;
   editor: Editor;
 }) {
+  const [isMounted, setIsMounted] = useState(false);
+
   useEffect(() => {
+    if (!isMounted) return;
+
     const initializeEditor = async () => {
       const holderEl = document.getElementById("editorjs");
       if (holderEl) holderEl.innerHTML = ""; // destroy any existing editor
@@ -19,7 +23,11 @@ export default function EditorJs({
     };
 
     initializeEditor();
-  }, [editor.isLocked, editor._id, userId]);
+  }, [isMounted, editor.isLocked, editor._id, userId]);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   return <div id="editorjs" className="editor-js-formats p-6" />;
 }
