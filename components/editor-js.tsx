@@ -12,8 +12,6 @@ export default function EditorJs({
 }) {
   useEffect(() => {
     const initializeEditor = async () => {
-      console.log("Reinitializing Editor with readOnly:", editor.isLocked);
-
       const holderEl = document.getElementById("editorjs");
       if (holderEl) holderEl.innerHTML = ""; // destroy any existing editor
 

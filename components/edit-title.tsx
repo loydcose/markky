@@ -31,10 +31,8 @@ export function EditTitle({
   const ref = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    console.log({ isNewEditor });
     if (isNewEditor) {
       setTimeout(() => {
-        // ref.current?.focus();
         ref.current?.select();
       }, 200);
     }
@@ -61,7 +59,6 @@ export function EditTitle({
         ref={ref}
         onBlur={() => {
           revalidateByTag("notes");
-          console.log("revalidated!");
         }}
         maxLength={64}
         value={noteTitle}

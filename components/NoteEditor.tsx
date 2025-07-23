@@ -24,10 +24,7 @@ export function NoteEditor({
   const debouncedIsLocked = useDebounce(isLocked, 500);
 
   useEffect(() => {
-    // update rough the db
-    // revalidate this editor
     const fetch = async () => {
-      console.log({ debouncedIsLocked });
       await updateEditor(activeEditor._id, { isLocked: debouncedIsLocked });
       revalidateByPath("/" + activeEditor.slug);
     };

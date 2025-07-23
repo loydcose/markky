@@ -24,8 +24,6 @@ export function NoteItem({
   const pathname = usePathname();
   const isActive = pathname === `/${note.slug}`;
 
-  console.log({ isActive });
-
   const handleDelete = async () => {
     deleteEditor(note._id);
     await deleteEditorAction(note._id);
