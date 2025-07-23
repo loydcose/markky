@@ -23,6 +23,7 @@ import { createEditor } from "@/actions";
 import { useEditorStore } from "@/slices/editors-store";
 import { Input } from "@/components/ui/input";
 import { useMediaQuery } from "react-responsive";
+import { useDebounce } from "@/hooks/use-debounce";
 
 type SidebarPanelProps = {
   user: any;
@@ -37,6 +38,10 @@ export function SidebarPanel({ user }: SidebarPanelProps) {
   const notesCount = editors.length;
   const favoritesCount = favorites.length;
   const isSmallScreen = useMediaQuery({ query: "(max-width: 768px)" });
+  const [searchTerm, setSearchTerm] = useState("");
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchResults, setSearchResults] = useState<Editor[]>([]);
 
   useEffect(() => {
     if (isSmallScreen) {
@@ -45,6 +50,25 @@ export function SidebarPanel({ user }: SidebarPanelProps) {
       setSidebarCollapsed(false);
     }
   }, [isSmallScreen]);
+
+  useEffect(() => {
+    if (debouncedSearchTerm.trim() !== "") {
+      setIsSearching(true);
+      const lower = debouncedSearchTerm.toLowerCase();
+      setSearchResults(
+        editors.filter(
+          (editor) =>
+            editor.title.toLowerCase().includes(lower) ||
+            (typeof editor.title === "string"
+              ? editor.title.toLowerCase().includes(lower)
+              : JSON.stringify(editor.title).toLowerCase().includes(lower))
+        )
+      );
+    } else {
+      setIsSearching(false);
+      setSearchResults([]);
+    }
+  }, [debouncedSearchTerm, editors]);
 
   const handleClick = async () => {
     const res = await createEditor(user._id);
@@ -103,6 +127,9 @@ export function SidebarPanel({ user }: SidebarPanelProps) {
             <Input
               placeholder="Search notes..."
               className="w-full text-xs h-7 px-2 py-1"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onBlur={() => setSearchTerm("")}
             />
           </div>
 
@@ -110,64 +137,96 @@ export function SidebarPanel({ user }: SidebarPanelProps) {
 
           {/* Main scrollable content: Favorites + Notes */}
           <div className="flex flex-col flex-1 min-h-0">
-            {/* Favorites Section */}
-            <div
-              className="mb-2 px-2 pt-2 flex flex-col min-h-0"
-              style={{ flexBasis: "40%", flexShrink: 0, minHeight: 0 }}
-            >
-              <div className="flex items-center mb-2 gap-1">
-                <Star size={12} />
-                <span className="font-medium text-gray-600 text-xs">
-                  Favorites
-                </span>
-                <span className="text-[10px] bg-gray-100 text-gray-600 rounded-full px-1.5 py-0.5">
-                  {favoritesCount}
-                </span>
-              </div>
-              {favoritesCount === 0 ? (
-                <p className="text-[10px] text-zinc-400">
-                  Favorite notes will go here.
-                </p>
-              ) : (
-                <ScrollArea className="flex-1 min-h-0 max-h-full overflow-y-auto">
+            {isSearching ? (
+              <div className="flex-1 flex flex-col px-2 pt-2 min-h-0">
+                <div className="flex items-center mb-2 gap-1">
+                  <FileText size={12} />
+                  <span className="font-medium text-gray-600 text-xs">
+                    Search Results
+                  </span>
+                  <span className="text-[10px] bg-gray-100 text-gray-600 rounded-full px-1.5 py-0.5">
+                    {searchResults.length}
+                  </span>
+                </div>
+                <ScrollArea className="flex-1 min-h-0 overflow-y-auto">
                   <div className="space-y-1">
-                    {favorites.map((note) => (
-                      <NoteItem
-                        key={note._id}
-                        note={note}
-                        isFavorite={true}
-                        user={user}
-                      />
-                    ))}
+                    {searchResults.length === 0 ? (
+                      <p className="text-[10px] text-zinc-400">
+                        No results found.
+                      </p>
+                    ) : (
+                      searchResults.map((note) => (
+                        <NoteItem key={note._id} note={note} user={user} />
+                      ))
+                    )}
                   </div>
                   <ScrollBar orientation="vertical" />
                 </ScrollArea>
-              )}
-            </div>
-
-            <Separator className="bg-gray-200" />
-
-            {/* Notes Section */}
-            <div
-              className="flex-1 flex flex-col px-2 pt-2 min-h-0"
-              style={{ flex: "1 1 60%", minHeight: 0 }}
-            >
-              <div className="flex items-center mb-2 gap-1">
-                <FileText size={12} />
-                <span className="font-medium text-gray-600 text-xs">Notes</span>
-                <span className="text-[10px] bg-gray-100 text-gray-600 rounded-full px-1.5 py-0.5">
-                  {notesCount}
-                </span>
               </div>
-              <ScrollArea className="flex-1 min-h-0 overflow-y-auto">
-                <div className="space-y-1">
-                  {editors.map((note) => (
-                    <NoteItem key={note._id} note={note} user={user} />
-                  ))}
+            ) : (
+              <>
+                {/* Favorites Section */}
+                <div
+                  className="mb-2 px-2 pt-2 flex flex-col min-h-0"
+                  style={{ flexBasis: "40%", flexShrink: 0, minHeight: 0 }}
+                >
+                  <div className="flex items-center mb-2 gap-1">
+                    <Star size={12} />
+                    <span className="font-medium text-gray-600 text-xs">
+                      Favorites
+                    </span>
+                    <span className="text-[10px] bg-gray-100 text-gray-600 rounded-full px-1.5 py-0.5">
+                      {favoritesCount}
+                    </span>
+                  </div>
+                  {favoritesCount === 0 ? (
+                    <p className="text-[10px] text-zinc-400">
+                      Favorite notes will go here.
+                    </p>
+                  ) : (
+                    <ScrollArea className="flex-1 min-h-0 max-h-full overflow-y-auto">
+                      <div className="space-y-1">
+                        {favorites.map((note) => (
+                          <NoteItem
+                            key={note._id}
+                            note={note}
+                            isFavorite={true}
+                            user={user}
+                          />
+                        ))}
+                      </div>
+                      <ScrollBar orientation="vertical" />
+                    </ScrollArea>
+                  )}
                 </div>
-                <ScrollBar orientation="vertical" />
-              </ScrollArea>
-            </div>
+
+                <Separator className="bg-gray-200" />
+
+                {/* Notes Section */}
+                <div
+                  className="flex-1 flex flex-col px-2 pt-2 min-h-0"
+                  style={{ flex: "1 1 60%", minHeight: 0 }}
+                >
+                  <div className="flex items-center mb-2 gap-1">
+                    <FileText size={12} />
+                    <span className="font-medium text-gray-600 text-xs">
+                      Notes
+                    </span>
+                    <span className="text-[10px] bg-gray-100 text-gray-600 rounded-full px-1.5 py-0.5">
+                      {notesCount}
+                    </span>
+                  </div>
+                  <ScrollArea className="flex-1 min-h-0 overflow-y-auto">
+                    <div className="space-y-1">
+                      {editors.map((note) => (
+                        <NoteItem key={note._id} note={note} user={user} />
+                      ))}
+                    </div>
+                    <ScrollBar orientation="vertical" />
+                  </ScrollArea>
+                </div>
+              </>
+            )}
           </div>
 
           {/* New Note Button at Bottom */}
