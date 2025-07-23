@@ -12,6 +12,7 @@ import {
 import { useNoteTitleStore } from "../slices/note-title-store";
 import { useRouter } from "next/navigation";
 import { useEditorStore } from "@/slices/editors-store";
+import { Calendar } from "lucide-react";
 
 type EditTitleProps = {
   userId: string;
@@ -55,16 +56,26 @@ export function EditTitle({
   };
 
   return (
-    <Input
-      ref={ref}
-      onBlur={() => {
-        revalidateByTag("notes");
-        console.log("revalidated!");
-      }}
-      value={noteTitle}
-      onChange={handleChange}
-      className="text-2xl font-bold bg-transparent border-none p-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-gray-900 placeholder:text-gray-400"
-      placeholder="Enter note title..."
-    />
+    <div className="flex flex-col gap-1">
+      <Input
+        ref={ref}
+        onBlur={() => {
+          revalidateByTag("notes");
+          console.log("revalidated!");
+        }}
+        value={noteTitle}
+        onChange={handleChange}
+        className="font-bold bg-transparent shadow-none border-none p-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-gray-900 placeholder:text-gray-400"
+        placeholder="Enter note title..."
+      />
+      <span className="flex items-center gap-1 text-xs text-zinc-500">
+        <Calendar size={14} />
+        {new Date(activeEditor.createdAt).toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        })}
+      </span>
+    </div>
   );
 }

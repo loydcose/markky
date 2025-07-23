@@ -2,24 +2,49 @@
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { ChevronLeft, ChevronRight, Plus, LogOut, User } from "lucide-react";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Plus,
+  LogOut,
+  User,
+  Menu,
+  MoreVertical,
+  PanelLeftOpen,
+  PanelLeftClose,
+  Star,
+  FileText,
+} from "lucide-react";
 import { NoteItem } from "./NoteItem";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createEditor } from "@/actions";
 import { useEditorStore } from "@/slices/editors-store";
+import { Input } from "@/components/ui/input";
+import { useMediaQuery } from "react-responsive";
 
 type SidebarPanelProps = {
   user: any;
 };
 
-export function SidebarPanel({
-  user,
-}: SidebarPanelProps) {
+export function SidebarPanel({ user }: SidebarPanelProps) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
   const { editors } = useEditorStore();
   const router = useRouter();
+  const favorites = editors.filter((x) => x.isPinned);
+  const notesCount = editors.length;
+  const favoritesCount = favorites.length;
+  const isSmallScreen = useMediaQuery({ query: "(max-width: 768px)" });
+
+  useEffect(() => {
+    if (isSmallScreen) {
+      setSidebarCollapsed(true);
+    } else {
+      setSidebarCollapsed(false);
+    }
+  }, [isSmallScreen]);
 
   const handleClick = async () => {
     const res = await createEditor(user._id);
@@ -29,15 +54,15 @@ export function SidebarPanel({
   return (
     <div
       className={`relative transition-all duration-300 ${
-        sidebarCollapsed ? "w-12" : "w-80"
-      } border-r border-gray-200 bg-white`}
+        sidebarCollapsed ? "w-12" : "min-w-72 w-72"
+      }  border-r border-gray-200 bg-white flex flex-col h-screen `}
     >
       {/* Collapse Toggle */}
       <Button
         onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
         size="sm"
         variant="ghost"
-        className="absolute -right-3 top-4 z-10 h-6 w-6 rounded-full border border-gray-300 bg-white p-0 hover:bg-gray-100"
+        className="absolute -right-3 top-[24px] z-10 h-6 w-6 rounded-full border border-gray-300 bg-white p-0 hover:bg-gray-100"
       >
         {sidebarCollapsed ? (
           <ChevronRight className="h-3 w-3" />
@@ -47,85 +72,128 @@ export function SidebarPanel({
       </Button>
 
       {!sidebarCollapsed && (
-        <div className="flex flex-col h-full p-4 overflow-y-auto">
-          {/* User Section */}
-          <div className="flex items-center gap-3 mb-6">
-            <div className="h-8 w-8 shrink-0 rounded-full bg-gray-200 flex items-center justify-center">
-              <User className="h-4 w-4 text-gray-600" />
+        <div className="flex flex-col h-full text-xs">
+          {/* User Section with Dropdown */}
+          <div className="flex items-center gap-2 relative px-2 py-2">
+            <div className="h-7 w-7 shrink-0 rounded-full bg-gray-200 flex items-center justify-center">
+              <User className="h-3 w-3 text-gray-600" />
             </div>
-            <span className="font-medium">{user.name}</span>
-          </div>
-
-          {/* Favorites Section */}
-          <div className="mb-6">
-            <h3 className="text-sm font-medium text-gray-600 mb-3">
-              Favorites
-            </h3>
-            {editors.filter(x => x.isPinned).length === 0 ? (
-              <p className="text-xs text-zinc-400">
-                Favorite notes will go here.
-              </p>
-            ) : (
-              <div className="space-y-2">
-                {editors.filter(x => x.isPinned).map((note) => (
-                  <NoteItem
-                    key={note._id}
-                    note={note}
-                    isFavorite={true}
-                    user={user}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
-
-          <Separator className="bg-gray-200 mb-6" />
-
-          {/* Notes Section */}
-          <div className="flex-1">
-            <h3 className="text-sm font-medium text-gray-600 mb-3">Notes</h3>
-            <ScrollArea className="h-full">
-              <div className="space-y-2">
-                {editors.map((note) => (
-                  <NoteItem key={note._id} note={note} user={user} />
-                ))}
-              </div>
-              <div className="mt-4">
-                <Button
-                  className="w-full bg-gray-900 hover:bg-gray-800 text-white"
-                  onClick={handleClick}
-                >
-                  <Plus className="h-4 w-4 mr-2" />
-                  New
-                </Button>
-              </div>
-            </ScrollArea>
-          </div>
-
-          {/* Logout Button */}
-          <div className="mt-4 pt-4 border-t border-gray-200">
+            <div className="flex flex-col flex-1 min-w-0">
+              <span className="font-medium truncate text-xs">{user.name}</span>
+              <span className="text-[10px] text-gray-400 truncate">
+                Personal Workspace
+              </span>
+            </div>
             <Button
-              variant="ghost"
-              className="w-full justify-start text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+              type="button"
+              variant={"ghost"}
+              size={"icon"}
+              className="flex items-center size-7 rounded-md text-xs text-zinc-400 hover:text-red-600 hover:bg-zinc-50"
+              onClick={() => setUserMenuOpen(false)}
             >
-              <LogOut className="h-4 w-4 mr-2" />
-              Logout
+              <LogOut className="h-3 w-3 m-auto" />
+            </Button>
+            {/* <Button type="button" variant={"ghost"} size={"icon"}>
+              <PanelLeftClose />
+            </Button> */}
+          </div>
+
+          {/* Search Bar */}
+          <div className="mb-2 px-2">
+            <Input
+              placeholder="Search notes..."
+              className="w-full text-xs h-7 px-2 py-1"
+            />
+          </div>
+
+          <Separator className="bg-gray-200" />
+
+          {/* Main scrollable content: Favorites + Notes */}
+          <div className="flex flex-col flex-1 min-h-0">
+            {/* Favorites Section */}
+            <div
+              className="mb-2 px-2 pt-2 flex flex-col min-h-0"
+              style={{ flexBasis: "40%", flexShrink: 0, minHeight: 0 }}
+            >
+              <div className="flex items-center mb-2 gap-1">
+                <Star size={12} />
+                <span className="font-medium text-gray-600 text-xs">
+                  Favorites
+                </span>
+                <span className="text-[10px] bg-gray-100 text-gray-600 rounded-full px-1.5 py-0.5">
+                  {favoritesCount}
+                </span>
+              </div>
+              {favoritesCount === 0 ? (
+                <p className="text-[10px] text-zinc-400">
+                  Favorite notes will go here.
+                </p>
+              ) : (
+                <ScrollArea className="flex-1 min-h-0 max-h-full overflow-y-auto">
+                  <div className="space-y-1">
+                    {favorites.map((note) => (
+                      <NoteItem
+                        key={note._id}
+                        note={note}
+                        isFavorite={true}
+                        user={user}
+                      />
+                    ))}
+                  </div>
+                  <ScrollBar orientation="vertical" />
+                </ScrollArea>
+              )}
+            </div>
+
+            <Separator className="bg-gray-200" />
+
+            {/* Notes Section */}
+            <div
+              className="flex-1 flex flex-col px-2 pt-2 min-h-0"
+              style={{ flex: "1 1 60%", minHeight: 0 }}
+            >
+              <div className="flex items-center mb-2 gap-1">
+                <FileText size={12} />
+                <span className="font-medium text-gray-600 text-xs">Notes</span>
+                <span className="text-[10px] bg-gray-100 text-gray-600 rounded-full px-1.5 py-0.5">
+                  {notesCount}
+                </span>
+              </div>
+              <ScrollArea className="flex-1 min-h-0 overflow-y-auto">
+                <div className="space-y-1">
+                  {editors.map((note) => (
+                    <NoteItem key={note._id} note={note} user={user} />
+                  ))}
+                </div>
+                <ScrollBar orientation="vertical" />
+              </ScrollArea>
+            </div>
+          </div>
+
+          {/* New Note Button at Bottom */}
+          <div className="mt-2 px-2 pb-2">
+            <Button
+              className="w-full bg-gray-900 hover:bg-gray-800 text-white text-xs h-7"
+              onClick={handleClick}
+            >
+              <Plus className="h-3 w-3 mr-1" />
+              New Note
             </Button>
           </div>
         </div>
       )}
 
       {sidebarCollapsed && (
-        <div className="flex flex-col items-center py-4 space-y-4">
-          <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
-            <User className="h-4 w-4 text-gray-600" />
+        <div className="flex flex-col items-center py-2 space-y-2 h-full">
+          <div className="h-7 w-7 rounded-full bg-gray-200 flex items-center justify-center">
+            <User className="h-3 w-3 text-gray-600" />
           </div>
-          <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
-            <Plus className="h-4 w-4" />
+          <Button size="sm" variant="ghost" className="h-7 w-7 p-0">
+            <Plus className="h-3 w-3" />
           </Button>
           <div className="flex-1" />
-          <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
-            <LogOut className="h-4 w-4" />
+          <Button size="sm" variant="ghost" className="h-7 w-7 p-0">
+            <LogOut className="h-3 w-3" />
           </Button>
         </div>
       )}

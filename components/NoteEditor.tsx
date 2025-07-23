@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { EditTitle } from "./edit-title";
 import EditorJs from "./editor-js";
+import { Separator } from "./ui/separator";
 
 type NoteEditorProps = {
   userId: string;
@@ -16,8 +17,8 @@ export function NoteEditor({ userId, activeEditor, isNewEditor }: NoteEditorProp
       <div className="p-6">
         <EditTitle userId={userId} activeEditor={activeEditor} isNewEditor={isNewEditor}/>
       </div>
-
-      <div className="flex-1 p-6">
+      <Separator className="bg-gray-200" />
+      <div className="flex-1">
         <EditorJs userId={userId} editorId={activeEditor._id} />
       </div>
     </div>

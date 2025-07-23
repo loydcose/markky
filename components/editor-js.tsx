@@ -26,7 +26,7 @@ export default function EditorJs({
     <>
       <div
         id="editorjs"
-        className="editor-js-formats bg-white border border-stone-100 rounded-lg py-6 px-8"
+        className="editor-js-formats p-6"
       />
     </>
   );

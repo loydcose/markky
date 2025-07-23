@@ -4,9 +4,9 @@ import {
   updateEditor,
 } from "@/actions";
 import { Button } from "@/components/ui/button";
-import { Heart, Trash2 } from "lucide-react";
+import { Calendar, Heart, Star, Trash2 } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import React from "react";
 import { useEditorStore } from "@/slices/editors-store";
 
@@ -21,6 +21,10 @@ export function NoteItem({
 }) {
   const { deleteEditor, favoriteEditor } = useEditorStore();
   const router = useRouter();
+  const pathname = usePathname();
+  const isActive = pathname === `/${note.slug}`;
+
+  console.log({ isActive });
 
   const handleDelete = async () => {
     deleteEditor(note._id);
@@ -36,34 +40,41 @@ export function NoteItem({
   };
 
   return (
-    <div className="group flex items-center gap-2 px-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition-colors">
+    <div
+      className={`group flex items-center gap-1 px-1 rounded-md bg-white hover:bg-zinc-100 transition-colors ${
+        isActive ? "bg-zinc-100" : ""
+      }`}
+    >
       <Link
         href={`/${note.slug}`}
-        className="flex-1 text-sm text-gray-900 truncate py-2"
+        className="flex-1 text-xs text-gray-900 truncate py-1 flex flex-col gap-0.5"
       >
-        {note.title}
+        <span className="truncate w-full block max-w-[200px]">{note.title}</span>
+        <span className="flex items-center gap-0.5 text-[10px] text-zinc-500">
+          <Calendar size={11} />
+          {new Date(note.createdAt).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}
+        </span>
       </Link>
       <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
         <Button
-          size="sm"
+          size="icon"
           variant="ghost"
-          className={`h-6 w-6 p-0 hover:bg-gray-100 ${
-            note.isPinned ? "text-red-500" : "text-gray-400"
-          }`}
+          className={`h-4 w-4 p-0 text-gray-500 hover:text-gray-700`}
           onClick={handleFavorite}
         >
-          <Heart
-            className="h-3 w-3"
-            // fill={note.isPinned ? "currentColor" : "none"}
-          />
+          <Star className="h-2.5 w-2.5" strokeWidth={1} />
         </Button>
         <Button
-          size="sm"
+          size="icon"
           variant="ghost"
-          className="h-6 w-6 p-0 text-gray-400 hover:text-red-500 hover:bg-gray-100"
+          className="h-4 w-4 p-0 text-gray-500 hover:text-red-500"
           onClick={handleDelete}
         >
-          <Trash2 className="h-3 w-3" />
+          <Trash2 className="h-2.5 w-2.5" strokeWidth={1} />
         </Button>
       </div>
     </div>

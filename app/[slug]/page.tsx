@@ -40,14 +40,13 @@ export default async function page({
 
   const activeEditor = await Editor.findOne({ slug: params.slug });
   const isNewEditor = (await searchParams).new;
-  console.log({ isNewEditor: !!isNewEditor });
 
   return (
     <div className="flex h-screen bg-gray-50 text-gray-900">
       <SidebarPanel user={user} />
 
       {activeEditor !== null ? (
-        <div className="size-full flex">
+        <div className="size-full min-h-screen overflow-y-auto flex overflow-x-hidden min-w-full md:min-w-0">
           <NoteEditor
             userId={user._id}
             activeEditor={activeEditor}

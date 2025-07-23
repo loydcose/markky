@@ -25,7 +25,7 @@ export default async function RootLayout({
       <body
         className={
           inter.className +
-          " min-h-screen bg-white dark:bg-zinc-900 text-sm md:text-base font-medium"
+          " min-h-screen bg-white dark:bg-zinc-900 text-sm font-medium"
         }
       >
         <Provider session={session}>{children}</Provider>
