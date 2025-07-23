@@ -21,7 +21,8 @@ type Editor = {
   title: string;
   content: Json;
   slug: string
-  isPinned: Boolean;
+  isLocked: boolean;
+  isPinned: boolean;
   createdAt: date;
   updatedAt: date;
 };

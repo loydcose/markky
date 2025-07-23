@@ -63,9 +63,10 @@ export function EditTitle({
           revalidateByTag("notes");
           console.log("revalidated!");
         }}
+        maxLength={64}
         value={noteTitle}
         onChange={handleChange}
-        className="font-bold bg-transparent shadow-none border-none p-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-gray-900 placeholder:text-gray-400"
+        className="min-w-0 truncate font-bold bg-transparent shadow-none border-none p-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-gray-900 placeholder:text-gray-400"
         placeholder="Enter note title..."
       />
       <span className="flex items-center gap-1 text-xs text-zinc-500">

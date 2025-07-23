@@ -19,6 +19,11 @@ const editorSchema = new Schema(
     content: {
       type: JSON,
     },
+    isLocked: {
+      type: Boolean,
+      required: true,
+      default: false, 
+    },
     isPinned: {
       type: Boolean,
       required: true,
