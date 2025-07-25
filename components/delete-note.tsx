@@ -45,7 +45,6 @@ export default function DeleteNote({ note }: { note: Editor }) {
       },
     });
     timeoutRef.current = setTimeout(async () => {
-      console.log("Note deleted!");
       await deleteEditorAction(note._id);
       revalidateByTag("notes");
       router.replace("/");

@@ -51,10 +51,6 @@ export function SidebarPanel({ user }: SidebarPanelProps) {
   };
 
   useEffect(() => {
-    console.log({ session });
-  }, [session]);
-
-  useEffect(() => {
     if (isSmallScreen) {
       setSidebarCollapsed(true);
     } else {
