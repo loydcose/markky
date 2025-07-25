@@ -69,6 +69,7 @@ const getEditorData = async (userId: string, editorId: string) => {
 const initEditor = async (userId: string, editorId: string, isLocked: boolean) => {
   const editor = new EditorJS({
     // autofocus: true,
+    placeholder: "Enter your note",
     readOnly: isLocked,
     holder: "editorjs",
     onReady: () => {

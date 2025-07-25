@@ -9,6 +9,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import React from "react";
 import { useEditorStore } from "@/slices/editors-store";
+import DeleteNote from "./delete-note";
 
 export function NoteItem({
   note,
@@ -19,17 +20,10 @@ export function NoteItem({
   user: User;
   isFavorite?: boolean;
 }) {
-  const { deleteEditor, favoriteEditor } = useEditorStore();
-  const router = useRouter();
+  const { favoriteEditor } = useEditorStore();
+
   const pathname = usePathname();
   const isActive = pathname === `/${note.slug}`;
-
-  const handleDelete = async () => {
-    deleteEditor(note._id);
-    await deleteEditorAction(note._id);
-    revalidateByTag("notes");
-    router.replace("/");
-  };
 
   const handleFavorite = async () => {
     favoriteEditor(note._id, !note.isPinned);
@@ -47,7 +41,9 @@ export function NoteItem({
         href={`/${note.slug}`}
         className="flex-1 text-xs text-gray-900 truncate py-1 flex flex-col gap-0.5"
       >
-        <span className="truncate w-full block max-w-[200px]">{note.title}</span>
+        <span className="truncate w-full block max-w-[200px]">
+          {note.title}
+        </span>
         <span className="flex items-center gap-0.5 text-[10px] text-zinc-500">
           <Calendar size={11} />
           {new Date(note.createdAt).toLocaleDateString("en-US", {
@@ -66,14 +62,7 @@ export function NoteItem({
         >
           <Star className="h-2.5 w-2.5" strokeWidth={1} />
         </Button>
-        <Button
-          size="icon"
-          variant="ghost"
-          className="h-4 w-4 p-0 text-gray-500 hover:text-red-500"
-          onClick={handleDelete}
-        >
-          <Trash2 className="h-2.5 w-2.5" strokeWidth={1} />
-        </Button>
+        <DeleteNote note={note} />
       </div>
     </div>
   );

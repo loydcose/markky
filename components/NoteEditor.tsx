@@ -8,6 +8,8 @@ import { Button } from "./ui/button";
 import { Lock, LockOpen } from "lucide-react";
 import { useDebounce } from "@/hooks/use-debounce";
 import { revalidateByPath, updateEditor } from "@/actions";
+import { useCreateNewEditor } from "@/slices/create-new-editor-store";
+import CreateNewEditorDisplay from "./create-new-editor-display";
 
 type NoteEditorProps = {
   userId: string;
@@ -22,6 +24,7 @@ export function NoteEditor({
 }: NoteEditorProps) {
   const [isLocked, setIsLocked] = useState(activeEditor.isLocked);
   const debouncedIsLocked = useDebounce(isLocked, 500);
+  const { deletedEditorId } = useCreateNewEditor();
 
   useEffect(() => {
     const fetch = async () => {
@@ -38,6 +41,12 @@ export function NoteEditor({
   const handleLockEditor = async () => {
     setIsLocked(!isLocked);
   };
+
+  if (
+    deletedEditorId &&
+    deletedEditorId.toString() === activeEditor._id.toString()
+  )
+    return <CreateNewEditorDisplay userId={userId} />;
 
   return (
     <div className="flex-1 flex flex-col bg-white">

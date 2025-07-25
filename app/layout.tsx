@@ -4,6 +4,7 @@ import "./globals.css"
 import { authOptions } from "./api/auth/[...nextauth]/route"
 import { getServerSession } from "next-auth"
 import Provider from "../contexts/client-provider"
+import { Toaster } from "@/components/ui/sonner"
 
 const inter = Inter({ subsets: ["latin"] })
 const notoSansMono = Noto_Sans_Mono({ subsets: ["latin"] })
@@ -29,6 +30,7 @@ export default async function RootLayout({
         }
       >
         <Provider session={session}>{children}</Provider>
+        <Toaster />
       </body>
     </html>
   )
