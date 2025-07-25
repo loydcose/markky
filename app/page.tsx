@@ -36,7 +36,7 @@ export default async function page() {
           action={async () => {
             "use server";
             const res = await createEditor(user._id);
-            redirect("/" + res.slug + "?new=true");
+            redirect("/editors/" + res.slug + "?new=true");
           }}
           className="m-auto flex flex-col gap-3"
         >

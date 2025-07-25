@@ -13,7 +13,7 @@ export default function CreateNewEditorDisplay({ userId }: { userId: string }) {
       <form
         action={async () => {
           const res = await createEditor(userId);
-          router.push("/" + res.slug + "?new=true");
+          router.push("/editors/" + res.slug + "?new=true");
         }}
         className="m-auto flex flex-col gap-3"
       >

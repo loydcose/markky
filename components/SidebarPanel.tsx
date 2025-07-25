@@ -24,6 +24,9 @@ import { useEditorStore } from "@/slices/editors-store";
 import { Input } from "@/components/ui/input";
 import { useMediaQuery } from "react-responsive";
 import { useDebounce } from "@/hooks/use-debounce";
+import { useSession } from "next-auth/react";
+import Image from "next/image";
+import { signOut } from "next-auth/react";
 
 type SidebarPanelProps = {
   user: any;
@@ -31,7 +34,6 @@ type SidebarPanelProps = {
 
 export function SidebarPanel({ user }: SidebarPanelProps) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [userMenuOpen, setUserMenuOpen] = useState(false);
   const { editors } = useEditorStore();
   const router = useRouter();
   const favorites = editors.filter((x) => x.isPinned);
@@ -42,6 +44,15 @@ export function SidebarPanel({ user }: SidebarPanelProps) {
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
   const [isSearching, setIsSearching] = useState(false);
   const [searchResults, setSearchResults] = useState<Editor[]>([]);
+  const { data: session } = useSession();
+
+  const handleLogout = () => {
+    signOut();
+  };
+
+  useEffect(() => {
+    console.log({ session });
+  }, [session]);
 
   useEffect(() => {
     if (isSmallScreen) {
@@ -72,7 +83,7 @@ export function SidebarPanel({ user }: SidebarPanelProps) {
 
   const handleClick = async () => {
     const res = await createEditor(user._id);
-    router.push("/" + res.slug + "?new=true");
+    router.push("/editors/" + res.slug + "?new=true");
   };
 
   return (
@@ -100,7 +111,19 @@ export function SidebarPanel({ user }: SidebarPanelProps) {
           {/* User Section with Dropdown */}
           <div className="flex items-center gap-2 relative px-2 py-2">
             <div className="h-7 w-7 shrink-0 rounded-full bg-gray-200 flex items-center justify-center">
-              <User className="h-3 w-3 text-gray-600" />
+              {session?.user?.image ? (
+                <div className="size-7 overflow-hidden rounded-full">
+                  <Image
+                    src={session.user.image}
+                    alt={session.user?.name ?? "User"}
+                    className="size-full object-cover"
+                    width={200}
+                    height={200}
+                  />
+                </div>
+              ) : (
+                <User className="h-3 w-3 text-gray-600" />
+              )}
             </div>
             <div className="flex flex-col flex-1 min-w-0">
               <span className="font-medium truncate text-xs">{user.name}</span>
@@ -113,7 +136,7 @@ export function SidebarPanel({ user }: SidebarPanelProps) {
               variant={"ghost"}
               size={"icon"}
               className="flex items-center size-7 rounded-md text-xs text-zinc-400 hover:text-red-600 hover:bg-zinc-50"
-              onClick={() => setUserMenuOpen(false)}
+              onClick={handleLogout}
             >
               <LogOut className="h-3 w-3 m-auto" />
             </Button>
@@ -247,11 +270,16 @@ export function SidebarPanel({ user }: SidebarPanelProps) {
           <div className="h-7 w-7 rounded-full bg-gray-200 flex items-center justify-center">
             <User className="h-3 w-3 text-gray-600" />
           </div>
-          <Button size="sm" variant="ghost" className="h-7 w-7 p-0">
+          <Button size="sm" variant="ghost" className="h-7 w-7 p-0" onClick={handleClick}>
             <Plus className="h-3 w-3" />
           </Button>
           <div className="flex-1" />
-          <Button size="sm" variant="ghost" className="h-7 w-7 p-0">
+          <Button
+            size="sm"
+            variant="ghost"
+            className="h-7 w-7 p-0"
+            onClick={handleLogout}
+          >
             <LogOut className="h-3 w-3" />
           </Button>
         </div>

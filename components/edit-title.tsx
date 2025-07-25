@@ -34,7 +34,7 @@ export function EditTitle({
     if (isNewEditor) {
       setTimeout(() => {
         ref.current?.select();
-      }, 200);
+      }, 400);
     }
   }, [isNewEditor]);
 
