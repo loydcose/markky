@@ -1,11 +1,11 @@
 import { getServerSession } from "next-auth";
 import { User } from "@/database/models/user";
 import { Editor } from "@/database/models/editor";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { SidebarPanel } from "../../../components/SidebarPanel";
 import { NoteEditor } from "../../../components/NoteEditor";
 import { dbConnect } from "@/database/db-connect";
 import SaveEditorsToStore from "@/components/save-editors-to-store";
+import { authOptions } from "@/lib/authOptions";
 
 export default async function page({
   params,

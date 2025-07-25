@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { Inter, Noto_Sans_Mono } from "next/font/google";
 import "./globals.css";
-import { authOptions } from "./api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
 import Provider from "../contexts/client-provider";
 import { Toaster } from "@/components/ui/sonner";
+import { authOptions } from "@/lib/authOptions";
 
 const inter = Inter({ subsets: ["latin"] });
 const notoSansMono = Noto_Sans_Mono({ subsets: ["latin"] });

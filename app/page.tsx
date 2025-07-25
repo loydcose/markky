@@ -5,10 +5,10 @@ import { Editor } from "@/database/models/editor";
 import { Button } from "@/components/ui/button";
 import { FileText, Plus } from "lucide-react";
 import { redirect } from "next/navigation";
-import { authOptions } from "./api/auth/[...nextauth]/route";
 import { SidebarPanel } from "@/components/SidebarPanel";
 import { dbConnect } from "@/database/db-connect";
 import SaveEditorsToStore from "@/components/save-editors-to-store";
+import { authOptions } from "@/lib/authOptions";
 
 export default async function page() {
   const session = await getServerSession(authOptions);
@@ -40,7 +40,7 @@ export default async function page() {
           }}
           className="m-auto flex flex-col gap-3 items-center"
         >
-             <FileText size={52} strokeWidth={1} />
+          <FileText size={52} strokeWidth={1} />
           <p>Ready to create a note?</p>
           <Button variant={"outline"}>
             Create a note <Plus />
