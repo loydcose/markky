@@ -1,8 +1,31 @@
-import mongoose from "mongoose"
+import mongoose, { Mongoose } from 'mongoose'
 
-const dbConnect = async () => {
-  mongoose.connect(process.env.MONGO_URI || "")
-  console.log("Connected to database")
+declare global {
+  // Allow global `mongoose` to be reused across reloads in dev
+  var mongoose: {
+    conn: Mongoose | null
+    promise: Promise<Mongoose> | null
+  }
 }
 
-export default dbConnect
+let cached = global.mongoose
+
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null }
+}
+
+export async function dbConnect(): Promise<Mongoose> {
+  if (cached.conn) {
+    return cached.conn
+  }
+
+  if (!cached.promise) {
+    const mongoUri = process.env.MONGO_URI
+    if (!mongoUri) throw new Error('MONGO_URI is not defined in environment variables')
+
+    cached.promise = mongoose.connect(mongoUri)
+  }
+
+  cached.conn = await cached.promise
+  return cached.conn
+}
