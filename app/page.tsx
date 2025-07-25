@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth";
 import { User } from "@/database/models/user";
 import { Editor } from "@/database/models/editor";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { FileText, Plus } from "lucide-react";
 import { redirect } from "next/navigation";
 import { authOptions } from "./api/auth/[...nextauth]/route";
 import { SidebarPanel } from "@/components/SidebarPanel";
@@ -38,8 +38,9 @@ export default async function page() {
             const res = await createEditor(user._id);
             redirect("/editors/" + res.slug + "?new=true");
           }}
-          className="m-auto flex flex-col gap-3"
+          className="m-auto flex flex-col gap-3 items-center"
         >
+             <FileText size={52} strokeWidth={1} />
           <p>Ready to create a note?</p>
           <Button variant={"outline"}>
             Create a note <Plus />
